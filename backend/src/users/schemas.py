@@ -43,6 +43,36 @@ class UserMeUpdatePartial(BaseModel):
     )
 
 
+class LoginUser(BaseModel):
+    username: str = Field(
+        ...,
+        min_length=6,
+        max_length=12,
+        pattern="^[a-z0-9]+$",
+    )
+    password: str = Field(
+        ...,
+        min_length=8,
+        max_length=16,
+        pattern="^[A-Za-z0-9]+$",
+    )
+
+
+class VerifyCodeUser(BaseModel):
+    username: str = Field(
+        ...,
+        min_length=6,
+        max_length=12,
+        pattern="^[a-z0-9]+$",
+    )
+    code: str = Field(
+        ...,
+        min_length=6,
+        max_length=6,
+        pattern="^[0-9]+$",
+    )
+
+
 class User(UserBase):
     username: str
     # email: EmailStr

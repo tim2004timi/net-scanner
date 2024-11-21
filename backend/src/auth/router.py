@@ -11,11 +11,13 @@ from .dependencies import (
     get_current_token_payload,
     get_current_auth_user_for_refresh,
     get_current_active_auth_user,
-    validate_auth_user,
+    validate_auth_user_form,
+    validate_auth_user_body,
+    register_user,
 )
 from .service import login, verify_code
 from ..database import db_manager
-from ..users import service
+from ..users import service, User
 from ..users.schemas import User as UserSchema, UserCreate as UserCreateSchema
 from .schemas import TokenInfo
 
@@ -28,10 +30,34 @@ router = APIRouter(
 )
 
 
-@router.post("/login/", response_model=TokenInfo, deprecated=True)
+@router.post("/login/", response_model=TokenInfo, summary="User login", deprecated=True)
 async def auth_user_issue_jwt(
-    user: UserSchema = Depends(validate_auth_user),
+    user: UserSchema = Depends(validate_auth_user_form),
 ):
+    """
+    Authenticates a user and returns access and refresh token.
+
+    - **login**: User's login/username (required)
+    - **password**: User's password (required)
+    """
+    access_token = await create_access_token(user)
+    refresh_token = await create_refresh_token(user)
+    return TokenInfo(
+        access_token=access_token,
+        refresh_token=refresh_token,
+    )
+
+
+@router.post(
+    "/register/", response_model=TokenInfo, summary="User register", deprecated=True
+)
+async def register(user: UserSchema = Depends(register_user)):
+    """
+    Registers a user and returns access and refresh token.
+
+    - **login**: User's login/username (required)
+    - **password**: User's password (required)
+    """
     access_token = await create_access_token(user)
     refresh_token = await create_refresh_token(user)
     return TokenInfo(
@@ -42,7 +68,7 @@ async def auth_user_issue_jwt(
 
 @router.post("/validate/")
 async def auth_user_issue_jwt(
-    _: UserSchema = Depends(validate_auth_user),
+    _: UserSchema = Depends(validate_auth_user_body),
 ):
     return {"message": "OK"}
 

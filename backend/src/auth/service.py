@@ -5,11 +5,11 @@ from geoip2.errors import AddressNotFoundError
 from aiogram import Bot
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .dependencies import validate_auth_user
+from .dependencies import validate_auth_user_body
 from .schemas import VerifyCodeRequest
 from ..config import settings, auth_settings
 from ..database import db_manager, redis_client
-from ..users.schemas import User as UserSchema
+from ..users.schemas import User as UserSchema, VerifyCodeUser
 from ..users.service import get_user_by_username
 
 import geoip2.database
@@ -21,7 +21,7 @@ geoip_reader = geoip2.database.Reader("data/GeoLite2-City.mmdb")
 bot = Bot(token=settings.bot_token)
 
 
-async def login(user: UserSchema = Depends(validate_auth_user)):
+async def login(user: UserSchema = Depends(validate_auth_user_body)):
     # Генерация 2FA кода
     code = str(random.randint(100000, 999999))
 
@@ -59,11 +59,12 @@ async def login(user: UserSchema = Depends(validate_auth_user)):
 
 async def verify_code(
     client_request: Request,
-    username: str = Form(),
-    code: str = Form(),
+    verify_code_user: VerifyCodeUser,
     session: AsyncSession = Depends(db_manager.session_dependency),
 ):
-    request = VerifyCodeRequest(username=username, code=code)
+    request = VerifyCodeRequest(
+        username=verify_code_user.username, code=verify_code_user.code
+    )
     # Получение сохраненного кода и количества попыток из Redis
     code = await redis_client.get(f"2fa_code:{request.username}")
     attempts = await redis_client.get(f"2fa_attempts:{request.username}")

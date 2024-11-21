@@ -11,9 +11,11 @@ from ..config import (
 )
 from . import utils as auth_utils
 from .. import utils
-from ..users.schemas import User as UserSchema
+from ..users.schemas import User as UserSchema, LoginUser, UserCreate
 from ..users import service
+from ..users.models import User
 from ..database import db_manager
+from ..users.service import create_user
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/jwt/login/")
 
@@ -84,10 +86,27 @@ async def get_current_active_auth_user(
     )
 
 
-async def validate_auth_user(
+async def validate_auth_user_form(
     username: str = Form(),
     password: str = Form(),
     session: AsyncSession = Depends(db_manager.session_dependency),
+) -> UserSchema:
+    return await validate_auth_user(
+        username=username, password=password, session=session
+    )
+
+
+async def validate_auth_user_body(
+    login_user: LoginUser,
+    session: AsyncSession = Depends(db_manager.session_dependency),
+) -> UserSchema:
+    return await validate_auth_user(
+        username=login_user.username, password=login_user.password, session=session
+    )
+
+
+async def validate_auth_user(
+    username: str, password: str, session: AsyncSession
 ) -> UserSchema:
     unauthed_exc = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -97,9 +116,6 @@ async def validate_auth_user(
     try:
         user = await service.get_user_by_username(session=session, username=username)
     except HTTPException:
-        user = None
-
-    if user is None:
         raise unauthed_exc
 
     if not utils.validate_password(
@@ -114,3 +130,10 @@ async def validate_auth_user(
         )
 
     return user
+
+
+async def register_user(
+    user_create: UserCreate,
+    session: AsyncSession = Depends(db_manager.session_dependency),
+) -> UserSchema:
+    return await create_user(session=session, user=user_create)

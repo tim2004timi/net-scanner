@@ -9,12 +9,19 @@ from .database import Base
 from .config import DEV
 
 
-origins = ["http://scannerbox.ru", "https://scannerbox.ru", ]
+origins = [
+    "http://scannerbox.ru",
+    "https://scannerbox.ru",
+]
 if DEV:
     origins.extend(["http://localhost:3000", "https://localhost:3000"])
 
 
-app = FastAPI(title="ScannerBox")
+app = FastAPI(
+    title="ScannerBox API",
+    description="API for scanning network platform ScannerBox",
+    version="1.0",
+)
 main_router = APIRouter(prefix="/api")
 
 
