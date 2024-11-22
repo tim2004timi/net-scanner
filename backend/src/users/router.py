@@ -23,63 +23,63 @@ router = APIRouter(
 )
 
 
-@router.get(
-    path="/",
-    response_model=List[User],
-    description="Get all users for admin",
-    dependencies=[Depends(check_permission(Permission.ADMIN))],
-)
-async def get_users(
-    session: AsyncSession = Depends(db_manager.session_dependency),
-):
-    return await service.get_users(session=session)
-
-
-@router.post(
-    path="/",
-    response_model=User,
-    description="Create new user for admin",
-    dependencies=[Depends(check_permission(Permission.ADMIN))],
-)
-async def create_user(
-    user_create: UserCreate,
-    session: AsyncSession = Depends(db_manager.session_dependency),
-):
-    return await service.create_user(session=session, user=user_create)
-
-
-@router.patch(
-    path="/",
-    response_model=User,
-    description="Update partial user for admin",
-    dependencies=[Depends(check_permission(Permission.ADMIN))],
-)
-async def update_user(
-    user_update: UserUpdatePartial,
-    session: AsyncSession = Depends(db_manager.session_dependency),
-    user: User = Depends(user_by_id_dependency),
-):
-    return await service.update_user(
-        session=session,
-        user_update=user_update,
-        user=user,
-    )
-
-
-@router.delete(
-    path="/",
-    response_model=User,
-    description="Delete user for admin",
-    dependencies=[Depends(check_permission(Permission.ADMIN))],
-)
-async def delete_user(
-    session: AsyncSession = Depends(db_manager.session_dependency),
-    user: User = Depends(user_by_id_dependency),
-):
-    return await service.delete_user(
-        session=session,
-        user=user,
-    )
+# @router.get(
+#     path="/",
+#     response_model=List[User],
+#     description="Get all users for admin",
+#     dependencies=[Depends(check_permission(Permission.ADMIN))],
+# )
+# async def get_users(
+#     session: AsyncSession = Depends(db_manager.session_dependency),
+# ):
+#     return await service.get_users(session=session)
+#
+#
+# @router.post(
+#     path="/",
+#     response_model=User,
+#     description="Create new user for admin",
+#     dependencies=[Depends(check_permission(Permission.ADMIN))],
+# )
+# async def create_user(
+#     user_create: UserCreate,
+#     session: AsyncSession = Depends(db_manager.session_dependency),
+# ):
+#     return await service.create_user(session=session, user=user_create)
+#
+#
+# @router.patch(
+#     path="/",
+#     response_model=User,
+#     description="Update partial user for admin",
+#     dependencies=[Depends(check_permission(Permission.ADMIN))],
+# )
+# async def update_user(
+#     user_update: UserUpdatePartial,
+#     session: AsyncSession = Depends(db_manager.session_dependency),
+#     user: User = Depends(user_by_id_dependency),
+# ):
+#     return await service.update_user(
+#         session=session,
+#         user_update=user_update,
+#         user=user,
+#     )
+#
+#
+# @router.delete(
+#     path="/",
+#     response_model=User,
+#     description="Delete user for admin",
+#     dependencies=[Depends(check_permission(Permission.ADMIN))],
+# )
+# async def delete_user(
+#     session: AsyncSession = Depends(db_manager.session_dependency),
+#     user: User = Depends(user_by_id_dependency),
+# ):
+#     return await service.delete_user(
+#         session=session,
+#         user=user,
+#     )
 
 
 @router.get(

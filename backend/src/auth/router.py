@@ -105,7 +105,7 @@ async def auth_refresh_jwt(
     """
     Refreshes an access token by refresh token.
 
-    - **refresh_token**: Header bearer refresh token(required)
+    - **refresh_token**: Header bearer refresh token (required)
     """
     if not user.active:
         raise HTTPException(
