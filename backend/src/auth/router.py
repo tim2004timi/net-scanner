@@ -19,7 +19,7 @@ from .service import login, verify_code
 from ..database import db_manager
 from ..users import service, User
 from ..users.schemas import User as UserSchema, UserCreate as UserCreateSchema
-from .schemas import TokenInfo
+from .schemas import TokenInfo, LinkTelegramBot
 
 http_bearer = HTTPBearer(auto_error=False)
 
@@ -37,8 +37,8 @@ async def auth_user_issue_jwt(
     """
     Authenticates a user and returns access and refresh token.
 
-    - **login**: User's login/username (required)
-    - **password**: User's password (required)
+    - **username**: User's login/username (required, 6-12 chars, pattern="^[a-z0-9]+$")
+    - **password**: User's password (required, 8-16 chars, pattern="^[A-Za-z0-9]+$")
     """
     access_token = await create_access_token(user)
     refresh_token = await create_refresh_token(user)
@@ -49,21 +49,16 @@ async def auth_user_issue_jwt(
 
 
 @router.post(
-    "/register/", response_model=TokenInfo, summary="User register", deprecated=True
+    "/register/", response_model=LinkTelegramBot, summary="User register first step"
 )
-async def register(user: UserSchema = Depends(register_user)):
+async def register(link_telegram_bot: LinkTelegramBot = Depends(register_user)):
     """
-    Registers a user and returns access and refresh token.
+    Registers a user first step.
 
-    - **login**: User's login/username (required)
-    - **password**: User's password (required)
+    - **username**: User's login/username (required, 6-12 chars, pattern="^[a-z0-9]+$")
+    - **password**: User's password (required, 8-16 chars, pattern="^[A-Za-z0-9]+$")
     """
-    access_token = await create_access_token(user)
-    refresh_token = await create_refresh_token(user)
-    return TokenInfo(
-        access_token=access_token,
-        refresh_token=refresh_token,
-    )
+    return link_telegram_bot
 
 
 @router.post("/validate/")

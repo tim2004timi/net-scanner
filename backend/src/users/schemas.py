@@ -24,6 +24,17 @@ class UserCreate(UserBase):
     )
 
 
+class UserCreateUsernameHashedPassword(UserBase):
+    username: str = Field(
+        ...,
+        min_length=6,
+        max_length=12,
+        pattern="^[a-z0-9]+$",
+    )
+    tg_username: str = Field(default="@example")
+    hashed_password: bytes
+
+
 class UserUpdatePartial(UserBase):
     tg_username: str | None = None
     password: str | None = Field(

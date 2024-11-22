@@ -1,5 +1,5 @@
 from aiogram import Dispatcher, Router, F
-from aiogram.filters import Command
+from aiogram.filters import Command, CommandStart, CommandObject
 from aiogram.fsm.context import FSMContext
 from aiogram.types import (
     Message,
@@ -13,20 +13,24 @@ from .keyboards import menu_inline_keyboard, menu_reply_keyboard
 from .utils import (
     get_user_from_system,
     edit_message,
+    create_user_by_unique_token,
 )
 
 
 router = Router()
 
 
-@router.message(Command("start"))
-async def cmd_start(message: Message):
-    user = await get_user_from_system(event=message)
+@router.message(CommandStart())
+async def cmd_start(message: Message, command: CommandObject):
+    arg = command.args
+    user = await create_user_by_unique_token(
+        token=arg, tg_username="@" + message.from_user.username
+    )
     if not user:
         return
     await redis_client.set(f"telegram_chat_id:{user.username}", message.chat.id)
     await message.answer(
-        f"Добро пожаловать! Ваш аккаунт привязан к chat ID {message.chat.id}. Теперь вы можете получать 2FA коды.",
+        f"Добро пожаловать! Ваш аккаунт привязан к платформе. Теперь вы можете получать 2FA коды.",
         reply_markup=menu_reply_keyboard,
     )
 
@@ -39,7 +43,9 @@ async def cmd_menu(message: Message, state: FSMContext):
 
 @router.callback_query(F.data == "menu")
 @edit_message
-async def menu_callback(callback: CallbackQuery, state: FSMContext) -> tuple[str, InlineKeyboardMarkup]:
+async def menu_callback(
+    callback: CallbackQuery, state: FSMContext
+) -> tuple[str, InlineKeyboardMarkup]:
     await state.clear()
     return await menu(event=callback)
 

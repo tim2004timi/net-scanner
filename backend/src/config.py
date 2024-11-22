@@ -10,6 +10,7 @@ DEV = True  # TODO: изменить
 TOKEN_TYPE_FIELD = "type"
 ACCESS_TOKEN_TYPE = "access"
 REFRESH_TOKEN_TYPE = "refresh"
+BOT_URL = "t.me/ScannerBoxBot" if not DEV else "t.me/TimohaStudyTestBot"
 
 
 class Settings(BaseSettings):
@@ -32,6 +33,7 @@ class AuthSettings(BaseModel):
     refresh_token_expire_days: int = 1
     tg_bot_code_expire_seconds: int = 120
     tg_bot_code_max_attempts: int = 3
+    tg_confirm_expire_seconds: int = 60 * 5
 
 
 settings = Settings()

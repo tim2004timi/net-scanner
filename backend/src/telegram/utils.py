@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from enum import Enum
 from itertools import zip_longest
@@ -8,8 +9,13 @@ from functools import wraps
 from fastapi import HTTPException
 
 from src.telegram.keyboards import menu_reply_keyboard
-from src.users.service import get_user_by_tg_username
-from src.database import db_manager
+from src.users.schemas import UserCreateUsernameHashedPassword
+from src.users.service import (
+    get_user_by_tg_username,
+    create_user,
+    create_user_by_username_hashed_password,
+)
+from src.database import db_manager, redis_client
 from src.users.models import User
 
 
@@ -111,3 +117,18 @@ def convert_to_moscow_time(utc_dt: datetime):
 
     # Форматирование даты в нужный формат
     return moscow_dt.strftime("%d.%m %H:%M")
+
+
+async def create_user_by_unique_token(token: str, tg_username: str) -> User:
+    data = json.loads(await redis_client.get(f"tg_register_confirm:{token}"))
+    if data is None:
+        raise ValueError
+    username = data["username"]
+    hashed_password = str.encode(data["hashed_password"], encoding="utf-8")
+    user_create = UserCreateUsernameHashedPassword(
+        username=username, hashed_password=hashed_password, tg_username=tg_username
+    )
+    async with db_manager.session_maker() as session:
+        return await create_user_by_username_hashed_password(
+            session=session, user_create=user_create
+        )
