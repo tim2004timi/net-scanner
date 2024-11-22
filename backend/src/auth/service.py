@@ -6,7 +6,7 @@ from aiogram import Bot
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .dependencies import validate_auth_user_body
-from .schemas import VerifyCodeRequest
+from .schemas import VerifyCodeRequest, LoginFirstStepMessageResponse
 from ..config import settings, auth_settings
 from ..database import db_manager, redis_client
 from ..users.schemas import User as UserSchema, VerifyCodeUser
@@ -53,8 +53,7 @@ async def login(user: UserSchema = Depends(validate_auth_user_body)):
             status_code=400,
             detail="Не получается отправить код в Telegram. Попробуйте позже",
         )
-
-    return {"message": "2FA код отправлен через Telegram"}
+    return LoginFirstStepMessageResponse(message="2FA код отправлен через Telegram")
 
 
 async def verify_code(

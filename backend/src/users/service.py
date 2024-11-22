@@ -56,6 +56,16 @@ async def create_user(session: AsyncSession, user: schemas.UserCreate) -> User:
     return user
 
 
+async def create_user_by_username_hashed_password(
+    session: AsyncSession, user_create: schemas.UserCreateUsernameHashedPassword
+) -> User:
+    user = User(**user_create.model_dump())
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
+    return user
+
+
 async def get_users(session: AsyncSession) -> list[User]:
     stmt = select(User).where(User.admin == False)
     result: Result = await session.execute(stmt)

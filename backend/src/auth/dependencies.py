@@ -1,23 +1,37 @@
+import json
+import uuid
+
+from aiogram import Bot
 from fastapi import Depends, HTTPException, Form
 from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
+from .schemas import (
+    LinkTelegramBot,
+    RegisterRequest,
+)
 from ..config import (
     TOKEN_TYPE_FIELD,
     ACCESS_TOKEN_TYPE,
     REFRESH_TOKEN_TYPE,
+    settings,
+    auth_settings,
 )
 from . import utils as auth_utils
 from .. import utils
 from ..users.schemas import User as UserSchema, LoginUser, UserCreate
 from ..users import service
 from ..users.models import User
-from ..database import db_manager
-from ..users.service import create_user
+from ..database import db_manager, redis_client
+from ..users.service import create_user, get_user_by_username
+from ..utils import hash_password
+from src import config
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/jwt/login/")
+bot = Bot(token=settings.bot_token)
 
 
 async def get_current_token_payload(token: str = Depends(oauth2_scheme)) -> dict:
@@ -133,7 +147,37 @@ async def validate_auth_user(
 
 
 async def register_user(
-    user_create: UserCreate,
+    user_create: RegisterRequest,
     session: AsyncSession = Depends(db_manager.session_dependency),
-) -> UserSchema:
-    return await create_user(session=session, user=user_create)
+) -> LinkTelegramBot:
+    try:
+        user = await get_user_by_username(
+            session=session, username=user_create.username
+        )
+    except HTTPException:
+        user = None
+
+    if user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Имя '{user.username}' уже занято",
+        )
+
+    unique_token = str(uuid.uuid4())
+    data = {
+        "username": user_create.username,
+        "hashed_password": hash_password(user_create.password).decode("utf-8"),
+        "status": "",
+    }
+    await redis_client.set(
+        f"tg_register_confirm:{unique_token}",
+        json.dumps(data),
+        ex=auth_settings.tg_confirm_expire_seconds,
+    )
+    url = config.BOT_URL + f"?start={unique_token}"
+    link_telegram_bot = LinkTelegramBot(
+        url=url,
+        expire_seconds=auth_settings.tg_confirm_expire_seconds,
+        unique_token=unique_token,
+    )
+    return link_telegram_bot
