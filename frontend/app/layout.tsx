@@ -1,11 +1,17 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({
   style: 'normal',
   subsets: ['cyrillic', 'latin'],
   weight: ['400', '500', '600', '700', '900']
+});
+const jetBrains = JetBrains_Mono({
+  style: 'normal',
+  subsets: ['cyrillic', 'latin'],
+  weight: ['400'],
+  variable: '--jet-brains-mono'
 });
 
 export const metadata: Metadata = {
@@ -20,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body className={`${inter.className} ${jetBrains.variable} antialiased`}>{children}</body>
     </html>
   );
 }
