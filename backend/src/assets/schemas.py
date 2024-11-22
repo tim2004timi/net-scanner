@@ -97,3 +97,9 @@ class Asset(AssetBase):
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class AssetsList(BaseModel):
+    assets: List[Asset]
+    total_pages: int
+    current_page: int

@@ -5,9 +5,9 @@ from sqlalchemy import select, Result
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from . import schemas
+from math import ceil
 from .models import Asset
-from .schemas import AssetCreate, StatusEnum, AssetUpdatePartial
+from .schemas import AssetCreate, StatusEnum, AssetUpdatePartial, AssetsList
 from ..users import User
 
 
@@ -26,11 +26,20 @@ async def get_asset_by_id(session: AsyncSession, user: User, asset_id: int) -> A
     return asset
 
 
-async def get_assets_by_user(session: AsyncSession, user: User) -> List[Asset]:
+async def get_assets_by_user(
+    session: AsyncSession, user: User, page_size: int = 10, page_number: int = 1
+) -> AssetsList:
+    limit = page_size
+    offset = (page_number - 1) * page_size
     stmt = select(Asset).where(Asset.user_id == user.id)
     result: Result = await session.execute(stmt)
-    assets = result.scalars().all()
-    return list(assets)
+    assets = list(result.scalars().all())
+    response_assets = assets[offset : offset + limit]
+    total_pages = ceil(len(assets) / page_size)
+    assets_list = AssetsList(
+        assets=response_assets, total_pages=total_pages, current_page=page_number
+    )
+    return assets_list
 
 
 async def create_asset(

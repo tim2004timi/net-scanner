@@ -9,7 +9,7 @@ from ..database import db_manager
 from . import service
 from ..auth.dependencies import get_current_active_auth_user
 from ..users.schemas import User
-from .schemas import Asset, AssetCreate, AssetUpdatePartial
+from .schemas import Asset, AssetCreate, AssetUpdatePartial, AssetsList
 
 http_bearer = HTTPBearer(auto_error=False)
 router = APIRouter(
@@ -24,25 +24,47 @@ router = APIRouter(
 
 @router.get(
     path="/",
-    response_model=List[Asset],
+    response_model=AssetsList,
     summary="Get assets for current user",
 )
 async def get_assets_by_user(
     session: AsyncSession = Depends(db_manager.session_dependency),
     user: User = Depends(get_current_active_auth_user),
+    page_size: int = 10,
+    page_number: int = 1,
 ):
     """
     Gets assets list for current authenticated user
 
     - **access_token**: Header bearer access token (required)
     """
-    return await service.get_assets_by_user(session=session, user=user)
+    return await service.get_assets_by_user(
+        session=session, user=user, page_size=page_size, page_number=page_number
+    )
+
+
+@router.get(
+    path="/{asset_id}/",
+    response_model=Asset,
+    summary="Get asset by id for current user",
+)
+async def get_asset_by_id(
+    asset_id: int,
+    session: AsyncSession = Depends(db_manager.session_dependency),
+    user: User = Depends(get_current_active_auth_user),
+):
+    """
+    Gets asset by id for current authenticated user
+
+    - **access_token**: Header bearer access token (required)
+    """
+    return await service.get_asset_by_id(session=session, user=user, asset_id=asset_id)
 
 
 @router.post(
     path="/",
     response_model=Asset,
-    summary="Create asset",
+    summary="Create asset for current user",
 )
 async def create_asset(
     asset_create: AssetCreate,
