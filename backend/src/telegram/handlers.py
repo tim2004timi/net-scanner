@@ -15,7 +15,7 @@ from .utils import (
     edit_message,
     create_user_by_unique_token,
 )
-
+from ..users.exceptions import UserExistsError
 
 router = Router()
 
@@ -23,9 +23,18 @@ router = Router()
 @router.message(CommandStart())
 async def cmd_start(message: Message, command: CommandObject):
     arg = command.args
-    user = await create_user_by_unique_token(
-        token=arg, tg_username="@" + message.from_user.username
-    )
+    try:
+        user = await create_user_by_unique_token(
+            token=arg, tg_username="@" + message.from_user.username
+        )
+    except ValueError:
+        await message.answer(
+            f"Запрос на регистрацию не найден! Зарегистрируйтесь на сайте и перейдите по ссылке, нажав кнопку 'start'"
+        )
+        return
+    except UserExistsError:
+        await message.answer(f"Вы уже зарегистрированы на платформе!")
+        return
     if not user:
         return
     await redis_client.set(f"telegram_chat_id:{user.username}", message.chat.id)
@@ -58,8 +67,8 @@ async def menu_message(message: Message, state: FSMContext):
 
 async def menu(event) -> None | tuple[str, InlineKeyboardMarkup]:
     user = await get_user_from_system(event=event)
-    message = "➖<b><a href='https://psihsystem.com'>PSIHSYSTEM</a></b>➖"
-    message += "\n<b>Удобная и надежная система</b>"
+    message = "➖<b><a href='https://scannerbox.ru'>ScannerBox</a></b>➖"
+    message += "\n<b>Удобная и надежная платформа</b>"
     if user:
         message += "\n\nℹ️ <b>Личный кабинет</b>"
         message += f"\nИмя: <u>{user.username}</u>"

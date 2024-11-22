@@ -8,12 +8,9 @@ from aiogram.types import (
 menu_inline_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
         [
-            InlineKeyboardButton(text="👕 Коллекции", callback_data="collections"),
-            InlineKeyboardButton(
-                text="🗒 Бизнес записи", callback_data="business-notes"
-            ),
+            InlineKeyboardButton(text="Что-то", callback_data="collections"),
+            InlineKeyboardButton(text="Что-то", callback_data="business-notes"),
         ],
-        [InlineKeyboardButton(text="🤖 AI Ассистент", callback_data="gpt_menu"),]
     ]
 )
 

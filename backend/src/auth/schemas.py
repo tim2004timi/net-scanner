@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
 
+from src.config import auth_settings
+
 
 class TokenInfo(BaseModel):
     access_token: str
@@ -35,3 +37,8 @@ class LinkTelegramBot(BaseModel):
     url: str
     expire_seconds: int
     unique_token: str
+
+
+class LoginFirstStepMessageResponse(BaseModel):
+    message: str = "2FA код отправлен через Telegram"
+    expire_seconds: int = auth_settings.tg_bot_code_expire_seconds

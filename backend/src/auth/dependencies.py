@@ -148,7 +148,21 @@ async def validate_auth_user(
 
 async def register_user(
     user_create: RegisterRequest,
+    session: AsyncSession = Depends(db_manager.session_dependency),
 ) -> LinkTelegramBot:
+    try:
+        user = await get_user_by_username(
+            session=session, username=user_create.username
+        )
+    except HTTPException:
+        user = None
+
+    if user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Имя '{user.username}' уже занято",
+        )
+
     unique_token = str(uuid.uuid4())
     data = {
         "username": user_create.username,
