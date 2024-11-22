@@ -4,6 +4,7 @@ from starlette.responses import JSONResponse
 
 from .auth.router import router as auth_router
 from .users.router import router as users_router
+from .assets.router import router as assets_router
 
 from .database import Base
 from .config import DEV
@@ -44,5 +45,6 @@ app.add_middleware(
 
 main_router.include_router(auth_router)
 main_router.include_router(users_router)
+main_router.include_router(assets_router)
 
 app.include_router(main_router)

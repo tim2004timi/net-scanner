@@ -1,5 +1,7 @@
+from typing import List
+
 from sqlalchemy import DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 
 from ..database import Base
@@ -9,7 +11,6 @@ class User(Base):
     __tablename__ = "users"
 
     username: Mapped[str] = mapped_column(unique=True)
-    # email: Mapped[str] = mapped_column(unique=True)
     tg_username: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[bytes]
     admin: Mapped[bool] = mapped_column(default=False)
@@ -19,4 +20,4 @@ class User(Base):
         DateTime, nullable=False, default=datetime.utcnow
     )
 
-
+    assets: Mapped[List["Asset"]] = relationship(back_populates="user")
