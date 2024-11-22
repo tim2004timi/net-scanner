@@ -17,6 +17,7 @@ const config: Config = {
       textColor: {
         muted: "#A1A1AA",
       },
+      fontFamily: { "jetBrains-mono": "var(--jet-brains-mono)" },
     },
   },
   plugins: [],

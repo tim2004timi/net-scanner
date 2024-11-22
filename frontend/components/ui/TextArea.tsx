@@ -1,12 +1,12 @@
-import { InputHTMLAttributes, ReactNode } from 'react';
+import { ReactNode, TextareaHTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   icon?: ReactNode;
   wrapperClassName?: string;
 }
 
-function Input({ icon, wrapperClassName, ...props }: InputProps) {
+function TextArea({ icon, wrapperClassName, ...props }: TextAreaProps) {
   return (
     <div
       className={twMerge(
@@ -14,12 +14,12 @@ function Input({ icon, wrapperClassName, ...props }: InputProps) {
         wrapperClassName
       )}
     >
-      <input
-        type={props.type ?? 'text'}
+      <textarea
         className={twMerge(
-          'w-full bg-transparent leading-5 outline-none placeholder:text-muted',
+          'w-full resize-none bg-transparent leading-5 outline-none placeholder:text-muted',
           props.className
         )}
+        rows={6}
         {...props}
       />
       {icon}
@@ -27,4 +27,4 @@ function Input({ icon, wrapperClassName, ...props }: InputProps) {
   );
 }
 
-export default Input;
+export default TextArea;
