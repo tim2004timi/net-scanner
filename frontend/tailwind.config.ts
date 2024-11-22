@@ -11,6 +11,11 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: "#0369A1",
+        "main-darker": "#44403C",
+      },
+      textColor: {
+        muted: "#A1A1AA",
       },
     },
   },
