@@ -7,6 +7,7 @@ import Input from '@/components/ui/Input';
 import { useState } from 'react';
 import TextArea from '@/components/ui/TextArea';
 import Checkbox from '@/components/ui/Checkbox';
+import Selector from '@/components/ui/Selector';
 
 function AddModal() {
   const [isVisible, setIsVisible] = useState(false);
@@ -29,11 +30,13 @@ function AddModal() {
         buttonLabel='Начать обнаружение'
       >
         <div className='flex w-full flex-col gap-4'>
-          <Input wrapperClassName='w-full' placeholder='Название группы' />
+          <Input wrapperClassName='w-full' title='Название группы' placeholder='Название группы' />
           <TextArea
             wrapperClassName='w-full'
-            placeholder={`Название группы ${'\n\n'}scannerbox.ru${'\n'}192.168.1.1${'\n'}192.168.2.0/24 `}
+            title='Список элементов для сканирования'
+            placeholder={`Введите список доменов или диапазон IP адресов ${'\n\n'}scannerbox.ru${'\n'}192.168.1.1${'\n'}192.168.2.0/24 `}
           />
+          <Selector />
           <Checkbox className='gap-3'>
             <span className='leading-5'>Уведомить в телеграм</span>
           </Checkbox>
