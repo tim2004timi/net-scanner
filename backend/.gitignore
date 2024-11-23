@@ -20,3 +20,4 @@ ENV/
 .idea/
 upload/
 certs/
+token.txt

@@ -9,7 +9,7 @@ from ..database import db_manager
 from . import service
 from ..auth.dependencies import get_current_active_auth_user
 from ..users.schemas import User
-from .schemas import Asset, AssetCreate, AssetUpdatePartial, AssetsList
+from .schemas import Asset, AssetCreate, AssetUpdatePartial, AssetsList, StatusEnum
 
 http_bearer = HTTPBearer(auto_error=False)
 router = APIRouter(
@@ -32,6 +32,8 @@ async def get_assets_by_user(
     user: User = Depends(get_current_active_auth_user),
     page_size: int = 10,
     page_number: int = 1,
+    name_search: str | None = None,
+    status: StatusEnum | None = None,
 ):
     """
     Gets assets list for current authenticated user
@@ -39,7 +41,12 @@ async def get_assets_by_user(
     - **access_token**: Header bearer access token (required)
     """
     return await service.get_assets_by_user(
-        session=session, user=user, page_size=page_size, page_number=page_number
+        session=session,
+        user=user,
+        page_size=page_size,
+        page_number=page_number,
+        status_filter=status,
+        name_search=name_search,
     )
 
 

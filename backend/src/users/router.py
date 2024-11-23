@@ -18,7 +18,6 @@ router = APIRouter(
     prefix="/users",
     dependencies=[
         Depends(http_bearer),
-        Depends(get_current_active_auth_user),
     ],
 )
 

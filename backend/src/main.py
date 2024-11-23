@@ -43,6 +43,7 @@ app.add_middleware(
     allow_headers=["*"],  # Разрешить все заголовки
 )
 
+
 main_router.include_router(auth_router)
 main_router.include_router(users_router)
 main_router.include_router(assets_router)
