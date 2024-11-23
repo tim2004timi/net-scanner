@@ -134,9 +134,7 @@ async def send_to_scan_service(asset_id: int, timeout=1):
     async with httpx.AsyncClient(timeout=timeout) as client:
         data = {"asset_id": asset.id, "targets": asset.targets}
         try:
-            response = await client.post(
-                HOST_SCAN_SERVICE_URL + "/api/scan-hosts/", json=data
-            )
+            response = await client.post(HOST_SCAN_SERVICE_URL, json=data)
             response.raise_for_status()
         except Exception as e:
             logger.info(f"Не удалось отправить asset на сканирование")

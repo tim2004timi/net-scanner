@@ -21,3 +21,4 @@ ENV/
 upload/
 certs/
 token.txt
+app.log
