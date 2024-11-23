@@ -88,7 +88,7 @@ async def create_host_scans(
     asset: Asset,
     host_scans_list_create: List[HostScanCreate],
 ):
-    await delete(HostScan)
+    await session.delete(HostScan)
     await session.commit()
 
     # Подготовка данных для вставки
