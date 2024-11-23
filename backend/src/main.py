@@ -5,6 +5,7 @@ from starlette.responses import JSONResponse
 from .auth.router import router as auth_router
 from .users.router import router as users_router
 from .assets.router import router as assets_router
+from .host_scans.router import router as host_scans_router
 
 from .database import Base
 from .config import DEV
@@ -43,8 +44,10 @@ app.add_middleware(
     allow_headers=["*"],  # Разрешить все заголовки
 )
 
+
 main_router.include_router(auth_router)
 main_router.include_router(users_router)
 main_router.include_router(assets_router)
+main_router.include_router(host_scans_router)
 
 app.include_router(main_router)

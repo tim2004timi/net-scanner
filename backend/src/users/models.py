@@ -21,3 +21,4 @@ class User(Base):
     )
 
     assets: Mapped[List["Asset"]] = relationship(back_populates="user")
+    host_scans: Mapped[List["HostScan"]] = relationship(back_populates="user")
