@@ -199,3 +199,12 @@ sqlalchemy.exc.InvalidRequestError: Mapper 'Mapper[User(users)]' has no property
 2024-11-24 01:09:52,676 - apscheduler.scheduler - INFO - base - shutdown - Scheduler has been shut down
 2024-11-24 01:09:52,677 - uvicorn.error - INFO - on - shutdown - Application shutdown complete.
 2024-11-24 01:09:52,677 - uvicorn.error - INFO - server - _serve - Finished server process [20772]
+2024-11-24 02:01:15,071 - alembic.runtime.migration - INFO - migration - __init__ - Context impl PostgresqlImpl.
+2024-11-24 02:01:15,072 - alembic.runtime.migration - INFO - migration - __init__ - Will assume transactional DDL.
+2024-11-24 02:01:15,412 - alembic.ddl.postgresql - INFO - postgresql - autogen_column_reflect - Detected sequence named 'vulnerability_scans_id_seq' as owned by integer column 'vulnerability_scans(id)', assuming SERIAL and omitting
+2024-11-24 02:01:15,549 - alembic.ddl.postgresql - INFO - postgresql - autogen_column_reflect - Detected sequence named 'cves_id_seq' as owned by integer column 'cves(id)', assuming SERIAL and omitting
+2024-11-24 02:01:15,584 - alembic.ddl.postgresql - INFO - postgresql - autogen_column_reflect - Detected sequence named 'host_scans_id_seq' as owned by integer column 'host_scans(id)', assuming SERIAL and omitting
+2024-11-24 02:01:15,607 - alembic.autogenerate.compare - INFO - compare - obj_removed - Detected removed unique constraint 'assets_name_key' on 'assets'
+2024-11-24 02:02:12,633 - alembic.runtime.migration - INFO - migration - __init__ - Context impl PostgresqlImpl.
+2024-11-24 02:02:12,634 - alembic.runtime.migration - INFO - migration - __init__ - Will assume transactional DDL.
+2024-11-24 02:02:12,657 - alembic.runtime.migration - INFO - migration - run_migrations - Running upgrade 7f9ee758a8a4 -> fdc861c03e40, empty message

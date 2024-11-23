@@ -10,7 +10,7 @@ from ..database import Base
 class Asset(Base):
     __tablename__ = "assets"
 
-    name: Mapped[str] = mapped_column(unique=True)
+    name: Mapped[str] = mapped_column()
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.utcnow
     )
