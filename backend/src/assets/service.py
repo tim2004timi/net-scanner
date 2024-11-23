@@ -11,14 +11,16 @@ from ..config import SCAN_SERVICE_URL
 from ..users import User
 
 
-async def get_asset_by_id(session: AsyncSession, user: User, asset_id: int) -> Asset:
+async def get_asset_by_id(
+    session: AsyncSession, user: User | None, asset_id: int
+) -> Asset:
     asset = await session.get(Asset, asset_id)
     if not asset:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Пользователь с ID ({asset_id}) не найден",
+            detail=f"Ресурс с ID ({asset_id}) не найден",
         )
-    if asset.user_id != user.id:
+    if user and asset.user_id != user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=f"Ресурс не принадлежит пользователю",
@@ -34,8 +36,6 @@ async def get_assets_by_user(
     name_search: str | None = None,
     status_filter: StatusEnum | None = None,
 ) -> AssetsList:
-    limit = page_size
-    offset = (page_number - 1) * page_size
     stmt = select(Asset).where(Asset.user_id == user.id)
     if status_filter is not None:
         stmt = stmt.where(Asset.status == status_filter)
@@ -45,6 +45,8 @@ async def get_assets_by_user(
     result: Result = await session.execute(stmt)
     assets = list(result.scalars().all())
 
+    limit = page_size
+    offset = (page_number - 1) * page_size
     response_assets = assets[offset : offset + limit]
     total_pages = ceil(len(assets) / page_size)
     assets_list = AssetsList(
