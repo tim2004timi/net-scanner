@@ -35,7 +35,7 @@ async def get_host_scans_by_asset_id(
     user: User = Depends(get_current_active_auth_user),
     page_size: int = 10,
     page_number: int = 1,
-    domain_search: str | None = None,
+    search: str | None = None,
 ):
     """
     Gets host scans list by asset ID for current authenticated user
@@ -48,7 +48,7 @@ async def get_host_scans_by_asset_id(
         user=user,
         page_size=page_size,
         page_number=page_number,
-        domain_search=domain_search,
+        search=search,
         asset=asset,
     )
 

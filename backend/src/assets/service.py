@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import httpx
 from fastapi import HTTPException
 from sqlalchemy import select, Result
@@ -33,14 +35,14 @@ async def get_assets_by_user(
     user: User,
     page_size: int = 10,
     page_number: int = 1,
-    name_search: str | None = None,
+    search: str | None = None,
     status_filter: StatusEnum | None = None,
 ) -> AssetsList:
     stmt = select(Asset).where(Asset.user_id == user.id)
     if status_filter is not None:
         stmt = stmt.where(Asset.status == status_filter)
-    if name_search is not None:
-        search = f"%{name_search}%"
+    if search is not None:
+        search = f"%{search}%"
         stmt = stmt.where(Asset.name.like(search))
     result: Result = await session.execute(stmt)
     assets = list(result.scalars().all())
@@ -76,6 +78,7 @@ async def create_asset(
     try:
         pass
         # await send_to_scan_service(asset=asset, timeout=1)
+        asset.start_host_scan_at = datetime.utcnow()
     except Exception as e:
         asset.status = StatusEnum.FAILED
         await session.commit()
@@ -95,6 +98,19 @@ async def update_asset(
     for name, value in asset_update.model_dump(exclude_unset=True).items():
         setattr(asset, name, value)
     await session.commit()
+
+    try:
+        pass
+        # await send_to_scan_service(asset=asset, timeout=1)
+        asset.start_host_scan_at = datetime.utcnow()
+    except Exception as e:
+        asset.status = StatusEnum.FAILED
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Не удалось отправить задачу сканеру",
+        )
+    await session.commit()
+    await session.refresh(asset)
     return asset
 
 

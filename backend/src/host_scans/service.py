@@ -4,7 +4,7 @@ from typing import List
 from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
 from fastapi import HTTPException
-from sqlalchemy import select, Result, func, insert, delete
+from sqlalchemy import select, Result, func, insert, delete, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
@@ -47,7 +47,7 @@ async def get_host_scans_by_asset_id(
     asset: Asset,
     page_size: int = 10,
     page_number: int = 1,
-    domain_search: str | None = None,
+    search: str | None = None,
 ) -> HostScanList:
     data = await get_total_ips_and_ports(
         session=session, user_id=user.id, asset_id=asset.id
@@ -56,9 +56,14 @@ async def get_host_scans_by_asset_id(
         (HostScan.asset_id == asset.id) & (HostScan.user_id == user.id)
     )
 
-    if domain_search is not None:
-        search = f"%{domain_search}%"
-        stmt = stmt.where(HostScan.domain.like(search))
+    if search is not None:
+        search = f"%{search}%"
+        stmt = stmt.where(
+            or_(
+                func.lower(HostScan.domain).like(func.lower(search)),
+                func.array_position(HostScan.ips, search).isnot(None),
+            )
+        )
     result: Result = await session.execute(stmt)
     host_scans = list(result.scalars().all())
 
@@ -83,7 +88,7 @@ async def create_host_scans(
     host_scans_list_create: List[HostScanCreate],
 ):
     await delete(HostScan)
-    await session.commit()  # TODO: Поменять
+    await session.commit()
 
     # Подготовка данных для вставки
     host_scans_data = [

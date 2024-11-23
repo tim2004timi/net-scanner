@@ -17,6 +17,8 @@ class Asset(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
     )
+    start_host_scan_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    end_host_scan_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     type: Mapped[str] = mapped_column()
     status: Mapped[str] = mapped_column()
     frequency: Mapped[str] = mapped_column()
