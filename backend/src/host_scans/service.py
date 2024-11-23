@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import reduce
 from typing import List
 
@@ -41,7 +42,7 @@ async def get_host_scan_by_id(
     return host_scan
 
 
-async def get_host_scans_by_asset_id(
+async def get_host_scans_by_asset(
     session: AsyncSession,
     user: User,
     asset: Asset,
@@ -104,6 +105,7 @@ async def create_host_scans(
 
     stmt = insert(HostScan).values(host_scans_data)
     await session.execute(stmt)
+    asset.updated_at = datetime.utcnow()
     await session.commit()
 
     if asset.tg_alerts:

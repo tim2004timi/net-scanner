@@ -30,3 +30,7 @@ class Asset(Base):
     user: Mapped["User"] = relationship(back_populates="assets")
 
     host_scans: Mapped[List["HostScan"]] = relationship(back_populates="asset")
+
+    vulnerability_scans: Mapped[List["VulnerabilityScan"]] = relationship(
+        back_populates="asset"
+    )

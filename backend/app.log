@@ -1,0 +1,201 @@
+2024-11-23 19:28:40,058 - uvicorn.error - INFO - server - _serve - Started server process [17204]
+2024-11-23 19:28:40,059 - uvicorn.error - INFO - on - startup - Waiting for application startup.
+2024-11-23 19:28:40,062 - apscheduler.scheduler - INFO - base - start - Scheduler started
+2024-11-23 19:28:40,066 - uvicorn.error - INFO - on - startup - Application startup complete.
+2024-11-23 19:28:40,067 - uvicorn.error - INFO - server - _log_started_message - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2024-11-23 19:29:16,295 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:58744 - "GET /docs HTTP/1.1" 200
+2024-11-23 19:29:16,764 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:58744 - "GET /openapi.json HTTP/1.1" 200
+2024-11-23 19:29:27,327 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:58748 - "POST /api/jwt/login/ HTTP/1.1" 200
+2024-11-23 19:29:56,727 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:58760 - "POST /api/assets/ HTTP/1.1" 400
+2024-11-23 19:30:01,908 - apscheduler.scheduler - INFO - base - _real_add_job - Added job "send_to_scan_service" to job store "default"
+2024-11-23 19:30:01,912 - apscheduler.scheduler - INFO - base - remove_job - Removed job scan_asset_7
+2024-11-23 19:30:01,912 - apscheduler.executors.default - INFO - base_py3 - run_coroutine_job - Running job "send_to_scan_service (trigger: date[2024-11-23 19:30:01 MSK], next run at: 2024-11-23 19:30:01 MSK)" (scheduled at 2024-11-23 19:30:01.902623+03:00)
+2024-11-23 19:30:01,925 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:58775 - "POST /api/assets/ HTTP/1.1" 200
+2024-11-23 19:30:03,205 - apscheduler.executors.default - ERROR - base_py3 - run_coroutine_job - Job "send_to_scan_service (trigger: date[2024-11-23 19:30:01 MSK], next run at: 2024-11-23 19:30:01 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_transports\default.py", line 69, in map_httpcore_exceptions
+    yield
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_transports\default.py", line 373, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpcore\_async\connection_pool.py", line 216, in handle_async_request
+    raise exc from None
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpcore\_async\connection_pool.py", line 196, in handle_async_request
+    response = await connection.handle_async_request(
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpcore\_async\connection.py", line 99, in handle_async_request
+    raise exc
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpcore\_async\connection.py", line 76, in handle_async_request
+    stream = await self._connect(request)
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpcore\_async\connection.py", line 122, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpcore\_backends\auto.py", line 30, in connect_tcp
+    return await self._backend.connect_tcp(
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpcore\_backends\anyio.py", line 114, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\apscheduler\executors\base_py3.py", line 30, in run_coroutine_job
+    retval = await job.func(*job.args, **job.kwargs)
+  File "D:\net-scanner\backend\src\assets\service.py", line 136, in send_to_scan_service
+    response = await client.post(SCAN_SERVICE_URL + "/api/scan-hosts/", json=data)
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_client.py", line 1892, in post
+    return await self.request(
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_client.py", line 1574, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_client.py", line 1661, in send
+    response = await self._send_handling_auth(
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_client.py", line 1689, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_client.py", line 1726, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_client.py", line 1763, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_transports\default.py", line 372, in handle_async_request
+    with map_httpcore_exceptions():
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\lib\contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\Тимофей\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\httpx\_transports\default.py", line 86, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+2024-11-23 19:30:05,441 - app - INFO - tasks - monitor_keep_alive_host_scans - Asset 7 marked as FAILED due to timeout.
+2024-11-23 19:41:03,898 - uvicorn.error - INFO - server - shutdown - Shutting down
+2024-11-23 19:41:04,023 - uvicorn.error - INFO - on - shutdown - Waiting for application shutdown.
+2024-11-23 19:41:04,041 - apscheduler.scheduler - INFO - base - shutdown - Scheduler has been shut down
+2024-11-23 19:41:04,071 - uvicorn.error - INFO - on - shutdown - Application shutdown complete.
+2024-11-23 19:41:04,080 - uvicorn.error - INFO - server - _serve - Finished server process [17204]
+2024-11-23 19:41:13,580 - uvicorn.error - INFO - server - _serve - Started server process [15596]
+2024-11-23 19:41:13,582 - uvicorn.error - INFO - on - startup - Waiting for application startup.
+2024-11-23 19:41:13,595 - apscheduler.scheduler - INFO - base - start - Scheduler started
+2024-11-23 19:41:13,598 - uvicorn.error - INFO - on - startup - Application startup complete.
+2024-11-23 19:41:13,599 - uvicorn.error - INFO - server - _log_started_message - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2024-11-23 19:41:32,584 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:52398 - "POST /api/jwt/login/ HTTP/1.1" 200
+2024-11-23 19:41:38,904 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:52403 - "GET /api/assets/?page_size=10&page_number=1 HTTP/1.1" 200
+2024-11-23 19:42:14,637 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:52409 - "GET /api/assets/?page_size=10&page_number=1&status=%D0%9F%D1%80%D0%BE%D0%B2%D0%B0%D0%BB%D0%B5%D0%BD%D0%BE HTTP/1.1" 200
+2024-11-23 19:42:28,501 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:52412 - "GET /api/assets/?page_size=10&page_number=1&status=%D0%92%20%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%B5 HTTP/1.1" 200
+2024-11-23 19:42:32,060 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:52412 - "GET /api/assets/?page_size=10&page_number=1&status=%D0%93%D0%BE%D1%82%D0%BE%D0%B2%D0%BE HTTP/1.1" 200
+2024-11-23 19:42:35,387 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:52412 - "GET /api/assets/?page_size=10&page_number=1 HTTP/1.1" 200
+2024-11-23 19:43:09,616 - apscheduler.scheduler - INFO - base - _real_add_job - Added job "send_to_scan_service" to job store "default"
+2024-11-23 19:43:09,628 - apscheduler.scheduler - INFO - base - remove_job - Removed job scan_asset_2
+2024-11-23 19:43:09,628 - apscheduler.executors.default - INFO - base_py3 - run_coroutine_job - Running job "send_to_scan_service (trigger: date[2024-11-23 19:43:09 MSK], next run at: 2024-11-23 19:43:09 MSK)" (scheduled at 2024-11-23 19:43:09.614821+03:00)
+2024-11-23 19:43:09,645 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:52424 - "PATCH /api/assets/2/ HTTP/1.1" 200
+2024-11-23 19:43:10,869 - app - INFO - service - send_to_scan_service - Не удалось отправить asset на сканирование: 
+2024-11-23 19:43:10,876 - apscheduler.executors.default - INFO - base_py3 - run_coroutine_job - Job "send_to_scan_service (trigger: date[2024-11-23 19:43:09 MSK], next run at: 2024-11-23 19:43:09 MSK)" executed successfully
+2024-11-23 20:48:45,007 - uvicorn.error - INFO - server - shutdown - Shutting down
+2024-11-23 20:48:45,113 - uvicorn.error - INFO - on - shutdown - Waiting for application shutdown.
+2024-11-23 20:48:45,119 - apscheduler.scheduler - INFO - base - shutdown - Scheduler has been shut down
+2024-11-23 20:48:45,119 - uvicorn.error - INFO - on - shutdown - Application shutdown complete.
+2024-11-23 20:48:45,120 - uvicorn.error - INFO - server - _serve - Finished server process [15596]
+2024-11-24 01:03:37,611 - alembic.runtime.migration - INFO - migration - __init__ - Context impl PostgresqlImpl.
+2024-11-24 01:03:37,611 - alembic.runtime.migration - INFO - migration - __init__ - Will assume transactional DDL.
+2024-11-24 01:03:37,648 - alembic.autogenerate.compare - INFO - compare - _compare_tables - Detected added table 'vulnerability_scans'
+2024-11-24 01:03:37,649 - alembic.autogenerate.compare - INFO - compare - _compare_tables - Detected added table 'cves'
+2024-11-24 01:03:37,756 - alembic.ddl.postgresql - INFO - postgresql - autogen_column_reflect - Detected sequence named 'host_scans_id_seq' as owned by integer column 'host_scans(id)', assuming SERIAL and omitting
+2024-11-24 01:04:03,066 - alembic.runtime.migration - INFO - migration - __init__ - Context impl PostgresqlImpl.
+2024-11-24 01:04:03,066 - alembic.runtime.migration - INFO - migration - __init__ - Will assume transactional DDL.
+2024-11-24 01:04:03,098 - alembic.util.messaging - ERROR - messaging - err - Target database is not up to date.
+2024-11-24 01:04:24,081 - alembic.runtime.migration - INFO - migration - __init__ - Context impl PostgresqlImpl.
+2024-11-24 01:04:24,082 - alembic.runtime.migration - INFO - migration - __init__ - Will assume transactional DDL.
+2024-11-24 01:04:24,095 - alembic.runtime.migration - INFO - migration - run_migrations - Running upgrade c82db2022345 -> 7f9ee758a8a4, empty message
+2024-11-24 01:06:16,808 - uvicorn.error - INFO - server - _serve - Started server process [16812]
+2024-11-24 01:06:16,808 - uvicorn.error - INFO - on - startup - Waiting for application startup.
+2024-11-24 01:06:16,815 - apscheduler.scheduler - INFO - base - start - Scheduler started
+2024-11-24 01:06:16,818 - uvicorn.error - INFO - on - startup - Application startup complete.
+2024-11-24 01:06:16,820 - uvicorn.error - INFO - server - _log_started_message - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2024-11-24 01:06:16,925 - asyncio - ERROR - base_events - default_exception_handler - Task exception was never retrieved
+future: <Task finished name='Task-3' coro=<monitor_keep_alive_host_scans() done, defined at D:\net-scanner\backend\src\tasks.py:14> exception=InvalidRequestError("Mapper 'Mapper[User(users)]' has no property 'cves'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.")>
+Traceback (most recent call last):
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 2509, in get_property
+    return self._props[key]
+KeyError: 'cves'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\net-scanner\backend\src\tasks.py", line 19, in monitor_keep_alive_host_scans
+    result = await session.execute(stmt)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 461, in execute
+    result = await greenlet_spawn(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\session.py", line 2236, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1632, in _execute_clauseelement
+    compiled_sql, extracted_params, cache_hit = elem._compile_w_cache(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\sql\elements.py", line 703, in _compile_w_cache
+    compiled_sql = self._compiler(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\sql\elements.py", line 316, in _compiler
+    return dialect.statement_compiler(dialect, self, **kw)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\sql\compiler.py", line 1429, in __init__
+    Compiled.__init__(self, dialect, statement, **kwargs)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\sql\compiler.py", line 870, in __init__
+    self.string = self.process(self.statement, **compile_kwargs)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\sql\compiler.py", line 915, in process
+    return obj._compiler_dispatch(self, **kwargs)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\sql\visitors.py", line 141, in _compiler_dispatch
+    return meth(self, **kw)  # type: ignore  # noqa: E501
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\sql\compiler.py", line 4679, in visit_select
+    compile_state = select_stmt._compile_state_factory(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\sql\base.py", line 683, in create_for_statement
+    return klass.create_for_statement(statement, compiler, **kw)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\context.py", line 1097, in create_for_statement
+    _QueryEntity.to_compile_state(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\context.py", line 2552, in to_compile_state
+    _MapperEntity(
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\context.py", line 2632, in __init__
+    entity._post_inspect
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\util\langhelpers.py", line 1253, in __get__
+    obj.__dict__[self.__name__] = result = self.fget(obj)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 2711, in _post_inspect
+    self._check_configure()
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 2388, in _check_configure
+    _configure_registries({self.registry}, cascade=True)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 4204, in _configure_registries
+    _do_configure_registries(registries, cascade)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 4245, in _do_configure_registries
+    mapper._post_configure_properties()
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 2405, in _post_configure_properties
+    prop.init()
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\interfaces.py", line 584, in init
+    self.do_init()
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\relationships.py", line 1647, in do_init
+    self._generate_backref()
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\relationships.py", line 2133, in _generate_backref
+    self._add_reverse_property(self.back_populates)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\relationships.py", line 1578, in _add_reverse_property
+    other = self.mapper.get_property(key, _configure_mappers=False)
+  File "D:\net-scanner\backend\venv\lib\site-packages\sqlalchemy\orm\mapper.py", line 2511, in get_property
+    raise sa_exc.InvalidRequestError(
+sqlalchemy.exc.InvalidRequestError: Mapper 'Mapper[User(users)]' has no property 'cves'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2024-11-24 01:08:34,955 - uvicorn.error - INFO - server - shutdown - Shutting down
+2024-11-24 01:08:35,062 - uvicorn.error - INFO - on - shutdown - Waiting for application shutdown.
+2024-11-24 01:08:35,063 - apscheduler.scheduler - INFO - base - shutdown - Scheduler has been shut down
+2024-11-24 01:08:35,063 - uvicorn.error - INFO - on - shutdown - Application shutdown complete.
+2024-11-24 01:08:35,064 - uvicorn.error - INFO - server - _serve - Finished server process [16812]
+2024-11-24 01:08:42,337 - uvicorn.error - INFO - server - _serve - Started server process [20772]
+2024-11-24 01:08:42,338 - uvicorn.error - INFO - on - startup - Waiting for application startup.
+2024-11-24 01:08:42,339 - apscheduler.scheduler - INFO - base - start - Scheduler started
+2024-11-24 01:08:42,342 - uvicorn.error - INFO - on - startup - Application startup complete.
+2024-11-24 01:08:42,343 - uvicorn.error - INFO - server - _log_started_message - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2024-11-24 01:08:46,207 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:63048 - "GET /docs HTTP/1.1" 200
+2024-11-24 01:08:46,694 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:63051 - "GET /openapi.json HTTP/1.1" 200
+2024-11-24 01:08:58,819 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:63054 - "POST /api/jwt/login/ HTTP/1.1" 200
+2024-11-24 01:09:06,163 - uvicorn.access - INFO - httptools_impl - send - 127.0.0.1:63061 - "GET /api/assets/?page_size=10&page_number=1 HTTP/1.1" 200
+2024-11-24 01:09:52,585 - uvicorn.error - INFO - server - shutdown - Shutting down
+2024-11-24 01:09:52,676 - uvicorn.error - INFO - on - shutdown - Waiting for application shutdown.
+2024-11-24 01:09:52,676 - apscheduler.scheduler - INFO - base - shutdown - Scheduler has been shut down
+2024-11-24 01:09:52,677 - uvicorn.error - INFO - on - shutdown - Application shutdown complete.
+2024-11-24 01:09:52,677 - uvicorn.error - INFO - server - _serve - Finished server process [20772]
