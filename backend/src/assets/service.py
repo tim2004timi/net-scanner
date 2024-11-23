@@ -44,7 +44,7 @@ async def get_assets_by_user(
     search: str | None = None,
     status_filter: StatusEnum | None = None,
 ) -> AssetsList:
-    stmt = select(Asset).where(Asset.user_id == user.id)
+    stmt = select(Asset).where(Asset.user_id == user.id).order_by(Asset.id.desc())
     if status_filter is not None:
         stmt = stmt.where(Asset.status == status_filter)
     if search is not None:
