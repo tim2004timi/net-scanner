@@ -103,7 +103,7 @@ function TableItem({
           <IoSparkles className='text-sm text-pink-400' />
           <span className='font-jetBrains-mono'>AI</span>
         </button>
-        <AiModal data={{ name: row.name }} />
+        <AiModal data={{ name: row.name, id: row.id }} />
       </div>
     </div>
   );

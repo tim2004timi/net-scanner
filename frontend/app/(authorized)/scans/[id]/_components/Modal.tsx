@@ -9,7 +9,7 @@ import { IoArrowBackOutline, IoSparkles } from 'react-icons/io5';
 import { FaCopy } from 'react-icons/fa6';
 import TextArea from '@/components/ui/TextArea';
 
-function Modal({ data }: { data: { name: string } }) {
+function Modal({ data }: { data: { name: string; id: number; aiText: string } }) {
   const [isVisible, setIsVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
   const modalRef = useRef(null);
@@ -51,7 +51,7 @@ function Modal({ data }: { data: { name: string } }) {
                   </span>
                   <Button
                     onClick={async () => {
-                      await navigator.clipboard.writeText('jlhasdkjashd');
+                      await navigator.clipboard.writeText(data.aiText);
                     }}
                   >
                     <FaCopy className='text-lg' />
@@ -61,7 +61,7 @@ function Modal({ data }: { data: { name: string } }) {
                   rows={20}
                   className='overflow-y-scroll'
                   readOnly
-                  defaultValue='asdljfh lsdkhf sldkfhj'
+                  defaultValue={data.aiText}
                 />
               </div>
             </div>

@@ -39,10 +39,10 @@ function TableItem({
             'size-3 rounded-full',
             /*
     // @ts-expect-error bullshit */
-            row.status === 'Провалено' ? 'bg-zinc-500' : dangerLevels[row.threat_level]
+            row.status !== 'Готово' ? 'bg-zinc-500' : dangerLevels[row.threat_level]
           )}
         />
-        <span>{row.status === 'Провалено' ? 'Неизвестно' : row.threat_level}</span>
+        <span>{row.status !== 'Готово' ? 'Неизвестно' : row.threat_level}</span>
       </span>
       <span>{row.asset_name}</span>
       <span>{row.duration}</span>
