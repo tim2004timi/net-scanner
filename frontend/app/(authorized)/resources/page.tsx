@@ -1,13 +1,11 @@
-import PaginationControls from '@/components/ui/PaginationControl';
 import Table from './_components/Table';
 import TopBar from './_components/TopBar';
 
-function ResourcesPage() {
+function ResourcesPage({ params }: { params: { [key: string]: string | string[] | undefined } }) {
   return (
     <div className='flex flex-col gap-4'>
       <TopBar />
-      <Table />
-      <PaginationControls className='self-end' />
+      <Table params={params} />
     </div>
   );
 }

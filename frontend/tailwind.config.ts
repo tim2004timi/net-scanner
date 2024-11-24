@@ -18,6 +18,21 @@ const config: Config = {
         muted: "#A1A1AA",
       },
       fontFamily: { "jetBrains-mono": "var(--jet-brains-mono)" },
+      keyframes: {
+        "slide-in": {
+          "0%": {
+            opacity: "0",
+            transform: "translate(0, 44px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translate(0, 28px)",
+          },
+        },
+      },
+      animation: {
+        "slide-in": "slide-in 150ms ease-in",
+      },
     },
   },
   plugins: [],

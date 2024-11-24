@@ -20,6 +20,7 @@ function TextArea({ icon, wrapperClassName, ...props }: TextAreaProps) {
           props.className
         )}
         rows={6}
+        name={props.name}
         {...props}
       />
       {icon}

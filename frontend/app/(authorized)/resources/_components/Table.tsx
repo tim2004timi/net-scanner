@@ -1,69 +1,42 @@
-import { RadioWaves, TripleDots } from '@/components/icons';
-import Button from '@/components/ui/Button';
+import getAssets from '@/api/getAssets';
 import Checkbox from '@/components/ui/Checkbox';
-import DropDown from '@/components/ui/DropDown';
+import PaginationControls from '@/components/ui/PaginationControl';
 import { Fragment } from 'react';
+import TableItem from './TableItem';
 
-const data = [
-  { name: 'Pipka1234', updated: '12.12.2023', type: 'Внутренний', status: 'Готово' },
-  { name: 'Pipok1234', updated: '12.12.2023', type: 'Внешний', status: 'В процессе' }
-];
+async function Table({ params }: { params: { [key: string]: string | string[] | undefined } }) {
+  const page = (params['page'] as string) ?? '1';
+  const pageSize = '10';
+  const assets = await getAssets({ pageSize, page });
 
-const dropDownOptions = {
-  default: [{ label: 'Обновить' }, { label: 'Повторить обнаружение' }],
-  danger: [{ label: 'Удалить' }]
-};
-
-function Table() {
   return (
-    <div className='flex flex-col'>
-      <div className='text-muted font-jetBrains-mono border-main-darker grid grid-cols-5 rounded-lg border bg-zinc-800 px-4 py-3 leading-5'>
-        <div className='flex items-center gap-4'>
-          <Checkbox />
-          Название
-        </div>
-        <span>Обновлено</span>
-        <span>Тип ресурса</span>
-        <span>Статус</span>
-      </div>
-      {data.map((row, index) => (
-        <Fragment key={row.name}>
-          <div className='text-muted group grid grid-cols-5 items-center rounded-lg px-4 py-3 leading-5 transition-all hover:bg-[#303033]'>
-            <div className='flex items-center gap-4'>
-              <Checkbox />
-              {row.name}
-            </div>
-            <span>{row.updated}</span>
-            <span>{row.type}</span>
-            <span>{row.status}</span>
-            <div className='flex items-center justify-end gap-2.5'>
-              <Button
-                colorScheme='secondary'
-                className='flex items-center gap-2.5 px-3.5 py-1.5 text-sm leading-[16px] text-white opacity-0 group-hover:opacity-100'
-                title='Опции'
-              >
-                <RadioWaves size={16} />
-                <span>Сканировать</span>
-              </Button>
-              <DropDown
-                trigger={
-                  <Button
-                    colorScheme='secondary'
-                    className='rounded border-0 px-1 py-1'
-                    title='Опции'
-                  >
-                    <TripleDots />
-                  </Button>
-                }
-                options={dropDownOptions.default}
-                danger={dropDownOptions.danger}
-              />
-            </div>
+    <>
+      <div className='flex flex-col'>
+        <div className='grid grid-cols-5 rounded-lg border border-main-darker bg-zinc-800 px-4 py-3 font-jetBrains-mono leading-5 text-muted'>
+          <div className='flex items-center gap-4'>
+            <Checkbox />
+            Название
           </div>
-          {data.length - 1 !== index && <div className='bg-main-darker h-px w-full' />}
-        </Fragment>
-      ))}
-    </div>
+          <span>Обновлено</span>
+          <span>Тип ресурса</span>
+          <span>Статус</span>
+        </div>
+        {assets.assets.length === 0 && (
+          <div className='mt-4 w-full text-center text-xl font-bold'>Пока здесь ничего нет</div>
+        )}
+        {assets.assets &&
+          assets.assets.map((row, index) => (
+            <Fragment key={row.name}>
+              <TableItem row={row} />
+              {assets.assets.length - 1 !== index && <div className='h-px w-full bg-main-darker' />}
+            </Fragment>
+          ))}
+      </div>
+      <PaginationControls
+        pageData={{ currentPage: assets.currentPage, totalPages: assets.totalPages }}
+        className='self-end'
+      />
+    </>
   );
 }
 
