@@ -1,17 +1,19 @@
 import Table from './_components/Table';
 import TopBar from './_components/TopBar';
 
-function ResourcesPage({
-  searchParams
+async function IndividualScan({
+  searchParams,
+  params
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
+  params: { id: string };
 }) {
   return (
     <div className='flex flex-col gap-4'>
       <TopBar />
-      <Table params={searchParams} />
+      <Table id={params.id} params={searchParams} />
     </div>
   );
 }
 
-export default ResourcesPage;
+export default IndividualScan;

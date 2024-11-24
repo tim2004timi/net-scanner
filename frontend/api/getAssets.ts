@@ -19,8 +19,8 @@ export type Assets = {
     end_host_scan_at: string;
     duration: string;
   }[];
-  totalPages: number;
-  currentPage: number;
+  total_pages: number;
+  current_page: number;
 };
 
 export default async function getAssets(searchParams: {
@@ -30,8 +30,8 @@ export default async function getAssets(searchParams: {
   const bearer = `Bearer ${cookies().get("jwt")?.value}`;
   const { page, pageSize } = searchParams;
   const params = new URLSearchParams({
-    page,
-    pageSize,
+    page_number: page,
+    page_size: pageSize,
   }).toString();
 
   const res = await fetch(
@@ -39,6 +39,7 @@ export default async function getAssets(searchParams: {
     {
       cache: "no-store",
       headers: { Authorization: bearer, "Content-Type": "application/json" },
+      next: { tags: ["resources"] },
     },
   );
 
