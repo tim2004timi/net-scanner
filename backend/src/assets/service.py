@@ -11,7 +11,7 @@ from math import ceil
 from .models import Asset
 from .schemas import AssetCreate, StatusEnum, AssetUpdatePartial, AssetsList
 from ..config import HOST_SCAN_SERVICE_URL
-from ..database import db_manager
+from ..database import db_manager, redis_client
 from ..scheduler_utils import remove_scheduled_scan, schedule_scan
 from ..users import User
 
@@ -78,6 +78,9 @@ async def create_asset(
         **asset_create.model_dump(), user_id=user.id, status=StatusEnum.IN_PROCESS
     )
     session.add(asset)
+    await session.flush()
+    key = f"asset:{asset.id}:host_scans:keep_alive"
+    await redis_client.set(key, 1, ex=11)
     await session.commit()
     await session.refresh(asset)
 

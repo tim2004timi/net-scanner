@@ -13,6 +13,7 @@ from math import ceil
 from .models import HostScan
 from .schemas import HostScanCreate, HostScanList
 from ..assets.models import Asset
+from ..assets.schemas import StatusEnum
 from ..config import settings
 from ..database import redis_client
 from ..users import User
@@ -88,6 +89,8 @@ async def create_host_scans(
     asset: Asset,
     host_scans_list_create: List[HostScanCreate],
 ):
+    if asset.status == StatusEnum.FAILED:
+        raise ValueError
     stmt = delete(HostScan).where(HostScan.asset_id == asset.id)
     await session.execute(stmt)
 
@@ -116,6 +119,7 @@ async def create_host_scans(
             )
         except Exception:
             pass
+
 
 
 async def delete_host_scan(session: AsyncSession, host_scan: HostScan) -> HostScan:

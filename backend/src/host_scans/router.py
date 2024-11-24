@@ -97,12 +97,15 @@ async def create_host_scans(
     - **ips**: List of ips (required, e.g. ["10.0.0.1", "10.0.0.2", "10.0.0.3"])
     """
     asset = await get_asset_by_id(session=session, asset_id=asset_id, user=None)
-    await service.create_host_scans(
-        session=session,
-        user_id=asset.user_id,
-        host_scans_list_create=host_scans_list_create,
-        asset=asset,
-    )
+    try:
+        await service.create_host_scans(
+            session=session,
+            user_id=asset.user_id,
+            host_scans_list_create=host_scans_list_create,
+            asset=asset,
+        )
+    except ValueError:
+        return {"message": "Ответ на сохранился, т.к. скан ресурса провален"}
     return {"message": "OK"}
 
 
