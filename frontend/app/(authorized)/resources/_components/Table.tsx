@@ -33,7 +33,7 @@ async function Table({ params }: { params: { [key: string]: string | string[] | 
           ))}
       </div>
       <PaginationControls
-        pageData={{ currentPage: assets.currentPage, totalPages: assets.totalPages }}
+        pageData={{ currentPage: assets.current_page, totalPages: assets.total_pages }}
         className='self-end'
       />
     </>

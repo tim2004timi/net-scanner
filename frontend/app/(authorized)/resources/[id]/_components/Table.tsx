@@ -43,7 +43,7 @@ async function Table({
           <span>IP</span>
           <span>Открытые порты</span>
         </div>
-        {/* {scans.host_scans.length === 0 && (
+        {scans.host_scans.length === 0 && (
           <div className='mt-4 w-full text-center text-xl font-bold'>Пока здесь ничего нет</div>
         )}
         {scans.host_scans &&
@@ -54,8 +54,8 @@ async function Table({
                 <div className='h-px w-full bg-main-darker' />
               )}
             </Fragment>
-          ))} */}
-        {list.length === 0 && (
+          ))}
+        {/* {list.length === 0 && (
           <div className='mt-4 w-full text-center text-xl font-bold'>Пока здесь ничего нет</div>
         )}
         {list.map((row, index) => (
@@ -63,7 +63,7 @@ async function Table({
             <TableItem row={row} />
             {list.length - 1 !== index && <div className='h-px w-full bg-main-darker' />}
           </Fragment>
-        ))}
+        ))} */}
       </div>
       <PaginationControls
         pageData={{ currentPage: scans.currentPage, totalPages: scans.totalPages }}

@@ -1,6 +1,6 @@
 'use client';
 
-import { Dashboard, Resource, Scans } from '@/components/icons';
+import { Resource, Scans } from '@/components/icons';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
 import { IoArrowBackOutline } from 'react-icons/io5';
@@ -9,14 +9,15 @@ import { twMerge } from 'tailwind-merge';
 
 const navButtons = [
   { name: 'Ресурсы', link: '/resources', icon: Resource },
-  { name: 'Дешборд', link: '/dashboard', icon: Dashboard },
+  // { name: 'Дешборд', link: '/dashboard', icon: Dashboard },
   { name: 'Сканы уязвимостей', link: '/scans', icon: Scans }
 ];
 
 function Navigation() {
   const pathname = usePathname();
   const isResourceDetailPage =
-    pathname.startsWith('/resources/') && pathname.split('/').length === 3;
+    (pathname.startsWith('/resources/') || pathname.startsWith('/scans/')) &&
+    pathname.split('/').length === 3;
   const router = useRouter();
 
   return (
