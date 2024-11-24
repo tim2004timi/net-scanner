@@ -12,45 +12,64 @@ const statuses = {
   'Активен': 'bg-red-500',
   'Исправлен': 'bg-green-600',
   'Не найден': 'bg-zinc-500',
-  'Не подтвержден': 'bg-zinc-500'
+  'Не подтвержден': 'bg-zinc-500',
+  'Получен': 'bg-blue-500'
 };
 
 function TableItem({
   row
 }: {
   row: {
-    id: number;
-    level: string;
-    cve: string;
+    name: string;
+    severity: number;
+    title: string;
     exploit: boolean;
     status: string;
-    title: string;
     description: string;
-    smth: string;
+    ip: string;
+    service: string;
+    port: number;
+    ai_answer: string;
+    id: number;
   };
 }) {
+  let type: string;
+  if (row.severity === 0) {
+    type = 'Неизвестно';
+  } else if (row.severity > 0 && row.severity < 4) {
+    type = 'Низкий';
+  } else if (row.severity >= 4 && row.severity < 7) {
+    type = 'Средний';
+  } else if (row.severity >= 7 && row.severity < 9) {
+    type = 'Высокий';
+  } else if (row.severity >= 9 && row.severity <= 10) {
+    type = 'Критичный';
+  } else {
+    type = '';
+  }
+
   return (
     <div className='group relative grid grid-cols-7 items-center overflow-hidden rounded-lg px-4 py-3 leading-5 text-muted transition-all hover:bg-[#303033]'>
       <div
         className={twMerge(
           'absolute bottom-0 left-0 size-20 rounded-full blur-2xl',
-          dangerLevels[row.level as keyof typeof dangerLevels]
+          dangerLevels[type as keyof typeof dangerLevels]
         )}
       />
       <div className='flex items-center self-start'>
         <span
           className={twMerge(
             'flex w-fit items-center rounded-md px-3 py-1 text-base font-normal text-white shadow-md',
-            dangerLevels[row.level as keyof typeof dangerLevels]
+            dangerLevels[type as keyof typeof dangerLevels]
           )}
         >
-          {row.level}
+          {type}
         </span>
       </div>
       <div className='self-start'>
         <div className='flex w-fit flex-col items-center gap-2'>
           <span className='flex w-fit items-center justify-center rounded-md border border-main-darker bg-zinc-800 px-3 py-1 font-jetBrains-mono'>
-            {row.cve}
+            {row.name}
           </span>
           <span className='text-sm text-muted'>
             {row.exploit ? 'Найден эксплоит' : 'Нет эксплойта'}
@@ -75,7 +94,7 @@ function TableItem({
       </div>
       <div className='flex justify-center self-start'>
         <span className='flex w-fit items-center rounded-md bg-zinc-800 px-1.5 py-1 font-jetBrains-mono text-white'>
-          {row.smth}
+          {row.ip}
         </span>
       </div>
       <div className='flex justify-end self-start'>
