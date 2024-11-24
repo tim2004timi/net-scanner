@@ -11,7 +11,7 @@ from math import ceil
 from .models import Asset
 from .schemas import AssetCreate, StatusEnum, AssetUpdatePartial, AssetsList
 from ..config import HOST_SCAN_SERVICE_URL
-from ..database import db_manager
+from ..database import db_manager, redis_client
 from ..scheduler_utils import remove_scheduled_scan, schedule_scan
 from ..users import User
 
@@ -78,6 +78,10 @@ async def create_asset(
         **asset_create.model_dump(), user_id=user.id, status=StatusEnum.IN_PROCESS
     )
     session.add(asset)
+    await session.flush()
+    key = f"asset:{asset.id}:host_scans:keep_alive"
+    await redis_client.set(key, 1, ex=11)
+    logger.info("Added asset to redis for keep-alive")
     await session.commit()
     await session.refresh(asset)
 
@@ -103,6 +107,10 @@ async def update_asset(
     for name, value in asset_update.model_dump(exclude_unset=True).items():
         setattr(asset, name, value)
     await session.commit()
+
+    key = f"asset:{asset.id}:host_scans:keep_alive"
+    await redis_client.set(key, 1, ex=11)
+    logger.info("Added asset to redis for keep-alive")
 
     try:
         schedule_scan(asset.id, asset.frequency)
@@ -131,10 +139,12 @@ async def send_to_scan_service(asset_id: int, timeout=1):
             asset = await get_asset_by_id(session=session, asset_id=asset_id, user=None)
         except Exception as e:
             logger.info(f"Не удалось получить asset для отправки: {e}")
-    async with httpx.AsyncClient(timeout=timeout) as client:
-        data = {"asset_id": asset.id, "targets": asset.targets}
-        try:
-            response = await client.post(HOST_SCAN_SERVICE_URL, json=data)
-            response.raise_for_status()
-        except Exception as e:
-            logger.info(f"Не удалось отправить asset на сканирование")
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            data = {"asset_id": asset.id, "targets": asset.targets}
+            try:
+                response = await client.post(HOST_SCAN_SERVICE_URL, json=data)
+                asset.start_host_scan_at = datetime.utcnow()
+                await session.commit()
+                response.raise_for_status()
+            except Exception as e:
+                logger.info(f"Не удалось отправить asset на сканирование")

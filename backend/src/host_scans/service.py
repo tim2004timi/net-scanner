@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from functools import reduce
 from typing import List
@@ -13,6 +14,7 @@ from math import ceil
 from .models import HostScan
 from .schemas import HostScanCreate, HostScanList
 from ..assets.models import Asset
+from ..assets.schemas import StatusEnum
 from ..config import settings
 from ..database import redis_client
 from ..users import User
@@ -23,6 +25,7 @@ bot = Bot(
     token=settings.bot_token,
     default=DefaultBotProperties(parse_mode="HTML"),
 )
+logger = logging.getLogger("app")
 
 
 async def get_host_scan_by_id(
@@ -88,9 +91,10 @@ async def create_host_scans(
     asset: Asset,
     host_scans_list_create: List[HostScanCreate],
 ):
-    query = await session.query(HostScan).where(HostScan.asset_id == asset.id)
-    await session.delete(query)
-    await session.commit()
+    if asset.status == StatusEnum.FAILED:
+        raise ValueError
+    stmt = delete(HostScan).where(HostScan.asset_id == asset.id)
+    await session.execute(stmt)
 
     # Подготовка данных для вставки
     host_scans_data = [
@@ -107,6 +111,8 @@ async def create_host_scans(
     stmt = insert(HostScan).values(host_scans_data)
     await session.execute(stmt)
     asset.updated_at = datetime.utcnow()
+    asset.end_host_scan_at = datetime.utcnow()
+    asset.status = StatusEnum.DONE
     await session.commit()
 
     if asset.tg_alerts:
@@ -115,8 +121,8 @@ async def create_host_scans(
             await host_scans_alert_telegram(
                 user=user, data=host_scans_data, asset=asset
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(e)
 
 
 async def delete_host_scan(session: AsyncSession, host_scan: HostScan) -> HostScan:
