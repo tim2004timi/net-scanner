@@ -5,7 +5,7 @@ from sqlalchemy.future import select
 
 from src.assets.models import Asset
 from src.assets.schemas import StatusEnum
-from src.database import redis_client
+from src.database import redis_client, db_manager
 
 
 logger = logging.getLogger("app")
@@ -13,7 +13,7 @@ logger = logging.getLogger("app")
 
 async def monitor_keep_alive_host_scans(session_factory):
     while True:
-        async with session_factory() as session:
+        async with db_manager.session_maker() as session:
             # Получаем все активы, статус которых не FAILED
             stmt = select(Asset).where(Asset.status == StatusEnum.IN_PROCESS)
             result = await session.execute(stmt)
