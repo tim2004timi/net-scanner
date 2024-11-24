@@ -1,4 +1,3 @@
-import deleteAsset from '@/actions/deleteAsset';
 import Checkbox from '@/components/ui/Checkbox';
 import Popover from '@/components/ui/Popover';
 
