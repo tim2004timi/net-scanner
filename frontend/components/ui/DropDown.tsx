@@ -15,7 +15,7 @@ function DropDown({
   row
 }: {
   trigger: ReactNode;
-  options: { label: string; onClick?: (id: string | number) => void }[];
+  options: { label: string; onClick?: (id: string | number | FormData) => void }[];
   danger?: { label: string; onClick?: (id: string | number) => void }[];
   id: string | number;
   row: {
@@ -45,6 +45,13 @@ function DropDown({
             <li key={option.label}>
               <button
                 onClick={async () => {
+                  if (option.label === 'Повторить обнаружение' && option.onClick) {
+                    const data = new FormData();
+                    data.append('onlyRefresh', 'ok');
+                    data.append('id', String(id));
+                    await option.onClick(data);
+                    return;
+                  }
                   if (option.onClick) {
                     await option.onClick(id);
                   }
