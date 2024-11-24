@@ -34,10 +34,15 @@ function TableItem({
         </Link>
       </div>
       <span className='flex items-center gap-1'>
-        {/*
-// @ts-expect-error bullshit */}
-        <div className={twMerge('size-3 rounded-full', dangerLevels[row.dangerLevel])} />
-        {/* <span>{row.threat_level}</span> */}
+        <div
+          className={twMerge(
+            'size-3 rounded-full',
+            /*
+    // @ts-expect-error bullshit */
+            row.status === 'Провалено' ? 'bg-zinc-500' : dangerLevels[row.threat_level]
+          )}
+        />
+        <span>{row.status === 'Провалено' ? 'Неизвестно' : row.threat_level}</span>
       </span>
       <span>{row.asset_name}</span>
       <span>{row.duration}</span>

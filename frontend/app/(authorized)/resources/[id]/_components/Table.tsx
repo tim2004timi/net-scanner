@@ -4,23 +4,6 @@ import PaginationControls from '@/components/ui/PaginationControl';
 import TableItem from './TableItem';
 import getHostScans from '@/api/getHostScans';
 
-const list = [
-  { id: 1, domain: 'super-suck.com', ips: ['122.08.2.224', '122.08.2.224'], ports: [8080, 7070] },
-  { id: 1, domain: 'super-suck.com', ips: ['122.08.2.224'], ports: [8080] },
-  {
-    id: 1,
-    domain: 'super-suck.com',
-    ips: ['122.08.2.224', '122.08.2.224'],
-    ports: [8080, 7070, 3000]
-  },
-  {
-    id: 1,
-    domain: 'super-suck.com',
-    ips: ['122.08.2.224', '122.08.2.224', '122.08.2.224'],
-    ports: [8080]
-  }
-];
-
 async function Table({
   params,
   id
