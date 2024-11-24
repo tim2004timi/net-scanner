@@ -1,11 +1,12 @@
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List
 from enum import Enum
 from pydantic import (
     BaseModel,
     field_validator,
     ConfigDict,
+    Field,
 )
 import ipaddress
 
@@ -31,7 +32,7 @@ class FrequencyEnum(str, Enum):
 class AssetBase(BaseModel):
     name: str
     type: TypeEnum = TypeEnum.EXTERNAL
-    targets: List[str]
+    targets: List[str] = Field(..., example=["127.0.0.1", "127.0.0.1/30", "domain.ru"])
     frequency: FrequencyEnum = FrequencyEnum.ONCE
     tg_alerts: bool = False
 
@@ -85,7 +86,9 @@ class AssetCreate(AssetBase):
 class AssetUpdatePartial(AssetCreate):
     name: str | None = None
     type: TypeEnum | None = None
-    targets: List[str] | None = None
+    targets: List[str] | None = Field(
+        None, example=["127.0.0.1", "127.0.0.1/30", "domain.ru"]
+    )
     frequency: FrequencyEnum | None = None
     tg_alerts: bool | None = None
 
@@ -95,6 +98,30 @@ class Asset(AssetBase):
     status: StatusEnum
     created_at: datetime
     updated_at: datetime
+    start_host_scan_at: datetime | None
+    end_host_scan_at: datetime | None
+    duration: str | None = Field(None, example="1 м.")
+
+    @field_validator("duration", mode="before")
+    def calculate_duration(cls, _, values) -> str | None:
+        start = values.get("start_host_scan_at")
+        end = values.get("end_host_scan_at")
+        if start and end:
+            delta = end - start
+            return cls._format_duration(delta)
+        return None
+
+    @staticmethod
+    def _format_duration(delta: timedelta) -> str:
+        seconds = delta.total_seconds()
+        if seconds < 60:
+            return f"{int(seconds)} с."
+        elif seconds < 3600:
+            return f"{int(seconds // 60)} м."
+        elif seconds < 86400:
+            return f"{int(seconds // 3600)} ч."
+        else:
+            return f"{int(seconds // 86400)} д."
 
     model_config = ConfigDict(from_attributes=True)
 

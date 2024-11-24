@@ -1,12 +1,13 @@
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from fastapi.security import HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..assets.models import Asset
 from ..assets.service import get_asset_by_id
-from ..database import db_manager
+from ..database import db_manager, redis_client
 from . import service
 from ..auth.dependencies import get_current_active_auth_user
 from ..dependencies import check_permission, Permission
@@ -35,7 +36,7 @@ async def get_host_scans_by_asset_id(
     user: User = Depends(get_current_active_auth_user),
     page_size: int = 10,
     page_number: int = 1,
-    domain_search: str | None = None,
+    search: str | None = None,
 ):
     """
     Gets host scans list by asset ID for current authenticated user
@@ -43,12 +44,12 @@ async def get_host_scans_by_asset_id(
     - **access_token**: Header bearer access token (required)
     """
     asset = await get_asset_by_id(asset_id=asset_id, session=session, user=user)
-    return await service.get_host_scans_by_asset_id(
+    return await service.get_host_scans_by_asset(
         session=session,
         user=user,
         page_size=page_size,
         page_number=page_number,
-        domain_search=domain_search,
+        search=search,
         asset=asset,
     )
 
@@ -75,7 +76,7 @@ async def get_host_scan_by_id(
 
 @router.post(
     path="/{asset_id}/host-scans/",
-    summary="Create host scans list for asset for current user",
+    summary="Create host scans list for asset for scan service",
     dependencies=[Depends(check_permission(Permission.ADMIN))],
 )
 async def create_host_scans(
@@ -85,7 +86,7 @@ async def create_host_scans(
     user: User = Depends(get_current_active_auth_user),
 ):
     """
-    Creates an asset for current authenticated user.
+    Creates host scans.
     Endpoint only for scaner services.
 
     - **access_token**: Header bearer access token (required)
@@ -103,6 +104,35 @@ async def create_host_scans(
         asset=asset,
     )
     return {"message": "OK"}
+
+
+@router.post(
+    path="/{asset_id}/host-scans/keep-alive/",
+    summary="Keep alive for host scan for scan service",
+    dependencies=[Depends(check_permission(Permission.ADMIN))],
+)
+async def keep_alive_host_scan(
+    asset_id: int,
+    session: AsyncSession = Depends(db_manager.session_dependency),
+    _: User = Depends(get_current_active_auth_user),
+):
+    """
+    Keep alive for host scan for scan service every 5 minutes.
+    If there isn`t request for 11 minutes that status is Failed.
+    Endpoint only for scaner services.
+
+    - **access_token**: Header bearer access token (required)
+    """
+    # Проверяем, существует ли актив
+    asset = await session.get(Asset, asset_id)
+    if not asset:
+        raise HTTPException(status_code=404, detail="Ресурс не найден")
+
+    # Обновляем время последнего keep-alive в Redis с TTL 11 секунд
+    key = f"asset:{asset_id}:host_scans:keep_alive"
+    await redis_client.set(key, 1, ex=11)
+
+    return {"message": "Keep-alive signal received"}
 
 
 @router.delete(

@@ -23,6 +23,6 @@ class HostScan(Base):
     user: Mapped["User"] = relationship(back_populates="host_scans")
 
     asset_id: Mapped[int | None] = mapped_column(
-        ForeignKey("assets.id", ondelete="SET NULL"), nullable=True
+        ForeignKey("assets.id", ondelete="CASCADE"), nullable=True
     )
     asset: Mapped[Asset | None] = relationship(back_populates="host_scans")

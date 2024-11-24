@@ -3,14 +3,17 @@ from typing import List
 from pydantic import (
     BaseModel,
     field_validator,
-    ConfigDict,
+    ConfigDict, Field,
 )
 import ipaddress
 
 
 class HostScanBase(BaseModel):
     domain: str | None
-    ips: List[str]
+    ips: List[str] = Field(
+        ...,
+        example=["127.0.0.1", "168.192.0.1"]
+    )
     ports: List[int]
 
     @field_validator("ips", mode="before")

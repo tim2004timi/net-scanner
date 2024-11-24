@@ -22,3 +22,9 @@ class User(Base):
 
     assets: Mapped[List["Asset"]] = relationship(back_populates="user")
     host_scans: Mapped[List["HostScan"]] = relationship(back_populates="user")
+
+    vulnerability_scans: Mapped[List["VulnerabilityScan"]] = relationship(
+        back_populates="user"
+    )
+
+    cves: Mapped[List["CVE"]] = relationship(back_populates="user")

@@ -32,7 +32,7 @@ async def get_assets_by_user(
     user: User = Depends(get_current_active_auth_user),
     page_size: int = 10,
     page_number: int = 1,
-    name_search: str | None = None,
+    search: str | None = None,
     status: StatusEnum | None = None,
 ):
     """
@@ -46,7 +46,7 @@ async def get_assets_by_user(
         page_size=page_size,
         page_number=page_number,
         status_filter=status,
-        name_search=name_search,
+        search=search,
     )
 
 
@@ -79,7 +79,7 @@ async def create_asset(
     user: User = Depends(get_current_active_auth_user),
 ):
     """
-    Creates an asset for current authenticated user
+    Creates an asset for current authenticated user and run hosts scan.
 
     - **access_token**: Header bearer access token (required)
 
