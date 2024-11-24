@@ -1,5 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import { IoSparkles } from 'react-icons/io5';
+import AiModal from './AiModal';
 
 const dangerLevels = {
   'Критичный': 'bg-red-500',
@@ -102,6 +103,7 @@ function TableItem({
           <IoSparkles className='text-sm text-pink-400' />
           <span className='font-jetBrains-mono'>AI</span>
         </button>
+        <AiModal data={{ name: row.name }} />
       </div>
     </div>
   );
