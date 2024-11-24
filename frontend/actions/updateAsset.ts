@@ -7,16 +7,19 @@ import { redirect } from "next/navigation";
 export default async function updateAsset(formData: FormData) {
   const bearer = `Bearer ${cookies().get("jwt")?.value}`;
 
-  const bodyObj = {
-    name: formData.get("groupName"),
-    type: "Внешний",
-    targets: (formData.get("resourceList") as string)
-      .split("\n")
-      .map((line) => line.replace("\r", "").trim()),
-    frequency: formData.get("times"),
-    tg_alerts: formData.get("tgAlerts") === "on",
-  };
+  const bodyObj = formData.get("onlyRefresh")
+    ? {}
+    : {
+        name: formData.get("groupName"),
+        type: "Внешний",
+        targets: (formData.get("resourceList") as string)
+          .split("\n")
+          .map((line) => line.replace("\r", "").trim()),
+        frequency: formData.get("times"),
+        tg_alerts: formData.get("tgAlerts") === "on",
+      };
 
+  console.log(bodyObj);
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/assets/${formData.get("id")}/`,
     {

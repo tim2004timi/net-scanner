@@ -26,7 +26,7 @@ async function IndividualResource({
         </div>
       </div>
       <div className='flex flex-col gap-4'>
-        <TopBar />
+        <TopBar id={Number(params.id)} />
         <Table id={params.id} params={searchParams} />
       </div>
     </div>

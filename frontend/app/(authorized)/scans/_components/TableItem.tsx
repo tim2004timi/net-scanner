@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 
 const dangerLevels = {
-  'Критичный': 'bg-red-500',
+  'Критический': 'bg-red-500',
   'Высокий': 'bg-amber-600',
   'Средний': 'bg-blue-500',
   'Низкий': 'bg-green-500',
@@ -16,12 +16,13 @@ function TableItem({
 }: {
   row: {
     id: number;
-    scanId: string;
-    dangerLevel: string;
-    group: string;
-    duration: string;
-    date: string;
+    asset_name: string;
     status: string;
+    created_at: string;
+    start_host_scan_at: string;
+    end_host_scan_at: string;
+    duration: string;
+    threat_level: string;
   };
 }) {
   return (
@@ -29,18 +30,24 @@ function TableItem({
       <div className='flex items-center gap-4'>
         <Checkbox />
         <Link href={`/scans/${row.id}`} className='text-white transition-all hover:underline'>
-          {row.scanId}
+          {row.id}
         </Link>
       </div>
       <span className='flex items-center gap-1'>
         {/*
-// @ts-ignore */}
+// @ts-expect-error bullshit */}
         <div className={twMerge('size-3 rounded-full', dangerLevels[row.dangerLevel])} />
-        <span>{row.dangerLevel}</span>
+        {/* <span>{row.threat_level}</span> */}
       </span>
-      <span>{row.group}</span>
+      <span>{row.asset_name}</span>
       <span>{row.duration}</span>
-      <span>{row.date}</span>
+      <span>
+        {new Date(row.created_at).toLocaleString('ru-RU', {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric'
+        })}
+      </span>
       <Badge type={row.status as 'В процессе' | 'Провалено' | 'Готово'} />
     </div>
   );

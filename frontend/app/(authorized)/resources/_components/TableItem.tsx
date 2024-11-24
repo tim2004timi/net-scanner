@@ -1,13 +1,15 @@
 import deleteAsset from '@/actions/deleteAsset';
-import { RadioWaves, TripleDots } from '@/components/icons';
+import { TripleDots } from '@/components/icons';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import DropDown from '@/components/ui/DropDown';
 import Link from 'next/link';
+import ScanButton from './ScanButton';
+import updateAsset from '@/actions/updateAsset';
 
 const dropDownOptions = {
-  default: [{ label: 'Обновить' }, { label: 'Повторить обнаружение' }],
+  default: [{ label: 'Обновить' }, { label: 'Повторить обнаружение', onClick: updateAsset }],
   danger: [{ label: 'Удалить', onClick: deleteAsset }]
 };
 
@@ -47,14 +49,7 @@ function TableItem({
       <span>{row.type}</span>
       <Badge type={row.status as 'В процессе' | 'Провалено' | 'Готово'} />
       <div className='flex items-center justify-end gap-2.5'>
-        <Button
-          colorScheme='secondary'
-          className='flex items-center gap-2.5 px-3.5 py-1.5 text-sm leading-[16px] text-white opacity-0 group-hover:opacity-100'
-          title='Опции'
-        >
-          <RadioWaves size={16} />
-          <span>Сканировать</span>
-        </Button>
+        <ScanButton id={row.id} />
         <DropDown
           row={row}
           id={row.id}
@@ -63,6 +58,7 @@ function TableItem({
               <TripleDots />
             </Button>
           }
+          /*// @ts-expect-error bullshit */
           options={dropDownOptions.default}
           danger={dropDownOptions.danger}
         />
