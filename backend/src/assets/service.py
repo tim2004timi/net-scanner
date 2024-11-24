@@ -139,10 +139,12 @@ async def send_to_scan_service(asset_id: int, timeout=1):
             asset = await get_asset_by_id(session=session, asset_id=asset_id, user=None)
         except Exception as e:
             logger.info(f"Не удалось получить asset для отправки: {e}")
-    async with httpx.AsyncClient(timeout=timeout) as client:
-        data = {"asset_id": asset.id, "targets": asset.targets}
-        try:
-            response = await client.post(HOST_SCAN_SERVICE_URL, json=data)
-            response.raise_for_status()
-        except Exception as e:
-            logger.info(f"Не удалось отправить asset на сканирование")
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            data = {"asset_id": asset.id, "targets": asset.targets}
+            try:
+                response = await client.post(HOST_SCAN_SERVICE_URL, json=data)
+                asset.start_host_scan_at = datetime.utcnow()
+                await session.commit()
+                response.raise_for_status()
+            except Exception as e:
+                logger.info(f"Не удалось отправить asset на сканирование")
