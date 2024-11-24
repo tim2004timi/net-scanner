@@ -21,7 +21,7 @@ async def monitor_keep_alive_host_scans(session_factory):
 
             for asset in assets:
                 asset_id = asset.id
-                key = f"asset:{asset_id}:host-scans:keep_alive"
+                key = f"asset:{asset_id}:host_scans:keep_alive"
                 exists = await redis_client.exists(key)
 
                 if not exists and asset.status != StatusEnum.FAILED:
@@ -31,4 +31,4 @@ async def monitor_keep_alive_host_scans(session_factory):
                     logger.info(f"Asset {asset_id} marked as FAILED due to timeout.")
 
         # Ожидание 5 секунд перед следующей проверкой
-        await asyncio.sleep(5)
+        await asyncio.sleep(11)
