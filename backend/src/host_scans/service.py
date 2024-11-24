@@ -88,8 +88,8 @@ async def create_host_scans(
     asset: Asset,
     host_scans_list_create: List[HostScanCreate],
 ):
-    stmt = delete(HostScan).where(HostScan.asset_id == asset.id)
-    await session.execute(stmt)
+    query = await session.query(HostScan).where(HostScan.asset_id == asset.id)
+    await session.delete(query)
     await session.commit()
 
     # Подготовка данных для вставки
