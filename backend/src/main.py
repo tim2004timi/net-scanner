@@ -12,6 +12,7 @@ from .users.router import router as users_router
 from .assets.router import router as assets_router
 from .host_scans.router import router as host_scans_router
 from .vulnerability_scans.router import router as vulnerability_scans_router
+from .vulnerability_scans.router import router2 as cves_router
 
 from .database import Base, db_manager
 from .config import DEV, setup_logging
@@ -69,5 +70,6 @@ main_router.include_router(users_router)
 main_router.include_router(assets_router)
 main_router.include_router(host_scans_router)
 main_router.include_router(vulnerability_scans_router)
+main_router.include_router(cves_router)
 
 app.include_router(main_router)
