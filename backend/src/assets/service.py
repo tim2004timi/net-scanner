@@ -81,6 +81,7 @@ async def create_asset(
     await session.flush()
     key = f"asset:{asset.id}:host_scans:keep_alive"
     await redis_client.set(key, 1, ex=11)
+    logger.info("Added asset to redis for keep-alive")
     await session.commit()
     await session.refresh(asset)
 
@@ -106,6 +107,10 @@ async def update_asset(
     for name, value in asset_update.model_dump(exclude_unset=True).items():
         setattr(asset, name, value)
     await session.commit()
+
+    key = f"asset:{asset.id}:host_scans:keep_alive"
+    await redis_client.set(key, 1, ex=11)
+    logger.info("Added asset to redis for keep-alive")
 
     try:
         schedule_scan(asset.id, asset.frequency)

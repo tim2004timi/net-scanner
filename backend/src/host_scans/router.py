@@ -105,7 +105,7 @@ async def create_host_scans(
             asset=asset,
         )
     except ValueError:
-        return {"message": "Ответ на сохранился, т.к. скан ресурса провален"}
+        raise HTTPException(status_code=400, detail="Ответ на сохранился, т.к. скан ресурса провален")
     return {"message": "OK"}
 
 

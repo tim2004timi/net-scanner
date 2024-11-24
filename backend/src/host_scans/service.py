@@ -121,7 +121,6 @@ async def create_host_scans(
             pass
 
 
-
 async def delete_host_scan(session: AsyncSession, host_scan: HostScan) -> HostScan:
     await session.delete(host_scan)
     await session.commit()
