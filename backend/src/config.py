@@ -12,7 +12,7 @@ TOKEN_TYPE_FIELD = "type"
 ACCESS_TOKEN_TYPE = "access"
 REFRESH_TOKEN_TYPE = "refresh"
 BOT_URL = "t.me/ScannerBoxBot"
-VULNERABILITY_SCAN_SERVICE_URL = "http://localhost:8080/api/..."
+VULNERABILITY_SCAN_SERVICE_URL = "http://localhost:8080/api/vulnerability-scan"
 HOST_SCAN_SERVICE_URL = "http://localhost:8080/api/host-discovery-scan"
 AI_SERVICE_URL = "http://87.251.74.178/get_recommendations"
 
