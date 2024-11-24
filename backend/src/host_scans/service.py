@@ -109,6 +109,7 @@ async def create_host_scans(
     stmt = insert(HostScan).values(host_scans_data)
     await session.execute(stmt)
     asset.updated_at = datetime.utcnow()
+    asset.status = StatusEnum.DONE
     await session.commit()
 
     if asset.tg_alerts:
