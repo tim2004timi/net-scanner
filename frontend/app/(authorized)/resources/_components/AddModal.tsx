@@ -8,6 +8,7 @@ import { useState } from 'react';
 import TextArea from '@/components/ui/TextArea';
 import Checkbox from '@/components/ui/Checkbox';
 import Selector from '@/components/ui/Selector';
+import addAsset from '@/actions/addAsset';
 
 function AddModal() {
   const [isVisible, setIsVisible] = useState(false);
@@ -22,6 +23,7 @@ function AddModal() {
         <Plus size={20} />
       </Button>
       <Modal
+        action={addAsset}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         label='Добавить адрес'
@@ -30,14 +32,20 @@ function AddModal() {
         buttonLabel='Начать обнаружение'
       >
         <div className='flex w-full flex-col gap-4'>
-          <Input wrapperClassName='w-full' title='Название группы' placeholder='Название группы' />
+          <Input
+            wrapperClassName='w-full'
+            name='groupName'
+            title='Название группы'
+            placeholder='Название группы'
+          />
           <TextArea
             wrapperClassName='w-full'
             title='Список элементов для сканирования'
+            name='resourceList'
             placeholder={`Введите список доменов или диапазон IP адресов ${'\n\n'}scannerbox.ru${'\n'}192.168.1.1${'\n'}192.168.2.0/24 `}
           />
-          <Selector />
-          <Checkbox className='gap-3'>
+          <Selector name='times' />
+          <Checkbox name='tgAlerts' className='gap-3'>
             <span className='leading-5'>Уведомить в телеграм</span>
           </Checkbox>
         </div>

@@ -32,5 +32,6 @@ export async function loginSecondStep(prevData: unknown, formData: FormData) {
   };
 
   cookies().set("jwt", json.access_token, { maxAge: 86400 });
+  cookies().set("refresh", json.refresh_token, { maxAge: 86400 });
   redirect("/resources");
 }

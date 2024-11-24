@@ -12,8 +12,8 @@ function Modal({
   children,
   label,
   subLabel,
-  onSuccess,
-  buttonLabel
+  buttonLabel,
+  action
 }: {
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
@@ -22,6 +22,7 @@ function Modal({
   subLabel?: string;
   onSuccess: () => void;
   buttonLabel: string;
+  action: (formData: FormData) => Promise<void>;
 }) {
   const [mounted, setMounted] = useState(false);
   const modalRef = useRef(null);
@@ -40,7 +41,11 @@ function Modal({
         <>
           {isVisible && (
             <div className='absolute left-0 top-0 z-40 h-screen w-screen bg-black/50 backdrop-blur-md'>
-              <div
+              <form
+                action={async (data) => {
+                  await action(data);
+                  setIsVisible(false);
+                }}
                 ref={modalRef}
                 className='absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col gap-4 rounded-lg border border-main-darker bg-zinc-900 px-4 py-3'
               >
@@ -57,14 +62,18 @@ function Modal({
                 </div>
                 {children}
                 <div className='flex items-center gap-4 self-end leading-5'>
-                  <Button onClick={onSuccess} colorScheme='secondary' className='px-4'>
+                  <Button
+                    onClick={() => setIsVisible(false)}
+                    colorScheme='secondary'
+                    className='px-4'
+                  >
                     Отмена
                   </Button>
-                  <Button onClick={() => setIsVisible(false)} className='px-4'>
+                  <Button type='submit' className='px-4'>
                     {buttonLabel}
                   </Button>
                 </div>
-              </div>
+              </form>
             </div>
           )}
         </>,

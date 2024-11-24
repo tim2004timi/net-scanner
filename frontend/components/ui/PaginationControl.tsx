@@ -8,23 +8,19 @@ import { useCallback, useEffect } from 'react';
 
 interface PageData {
   currentPage: number;
-  pageSize: number;
   totalPages: number;
-  totalItems: number;
 }
 
 const buttonStyles =
   'transition-all flex aspect-square h-8 cursor-pointer items-center justify-center bg-transparent p-1 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#464646]';
 
-function PaginationControls({ className, pageData }: { className?: string; pageData?: PageData }) {
+function PaginationControls({ className, pageData }: { className?: string; pageData: PageData }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // const page = Number(searchParams.get('page') ?? '1');
-  // const pageSize = Number(searchParams.get('pageSize') ?? '10');
-  const page = 1;
-  const pageSize = 10;
+  const page = Number(searchParams.get('page') ?? '1');
+  const pageSize = Number('10');
 
   const getQueryString = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -35,18 +31,17 @@ function PaginationControls({ className, pageData }: { className?: string; pageD
   }, [searchParams]);
 
   const pagination = usePagination({
-    // total: pageData.totalPages,
-    total: 10,
+    total: pageData.totalPages || 1,
     page: page
   });
 
-  // useEffect(() => {
-  //   if (pageData.totalPages > 0 && pageData.totalPages < page) {
-  //     router.replace(
-  //       `${pathname}?page=${pageData.totalPages}&pageSize=${pageSize}${getQueryString() ? `&${getQueryString()}` : ''}`
-  //     );
-  //   }
-  // }, [getQueryString, page, pageData.totalPages, pageSize, pathname, router]);
+  useEffect(() => {
+    if (pageData.totalPages > 0 && pageData.totalPages < page) {
+      router.replace(
+        `${pathname}?page=${pageData.totalPages}&pageSize=${pageSize}${getQueryString() ? `&${getQueryString()}` : ''}`
+      );
+    }
+  }, [getQueryString, page, pageData.totalPages, pageSize, pathname, router]);
 
   const goToPage = (pageNumber: number) => {
     router.push(
@@ -57,7 +52,7 @@ function PaginationControls({ className, pageData }: { className?: string; pageD
   return (
     <div
       className={twMerge(
-        'border-main-darker text-muted flex items-center rounded-md border',
+        'flex items-center rounded-md border border-main-darker text-muted',
         className
       )}
     >
@@ -77,7 +72,7 @@ function PaginationControls({ className, pageData }: { className?: string; pageD
             type='button'
             className={twMerge(
               buttonStyles,
-              'border-main-darker border-x',
+              'border-x border-main-darker',
               item === page && 'bg-primary text-white'
             )}
             onClick={() => goToPage(item)}
@@ -92,8 +87,7 @@ function PaginationControls({ className, pageData }: { className?: string; pageD
       )}
       <button
         title='Следующая страница'
-        // disabled={page >= pageData.totalPages}
-        disabled={page >= 10}
+        disabled={page >= (pageData.totalPages || 1)}
         onClick={() => goToPage(page + 1)}
         type='button'
         className={twMerge(buttonStyles)}
