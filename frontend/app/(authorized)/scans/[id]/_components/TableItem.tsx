@@ -1,6 +1,5 @@
 import { twMerge } from 'tailwind-merge';
 import { IoSparkles } from 'react-icons/io5';
-import AiModal from './AiModal';
 
 const dangerLevels = {
   'Критичный': 'bg-red-500',
@@ -61,10 +60,10 @@ function TableItem({
         <span
           className={twMerge(
             'flex w-fit items-center rounded-md px-3 py-1 text-base font-normal text-white shadow-md',
-            dangerLevels[type as keyof typeof dangerLevels]
+            dangerLevels[type as keyof typeof dangerLevels] ?? dangerLevels['Неизвестно']
           )}
         >
-          {type}
+          {type ?? 'Неизвестно'}
         </span>
       </div>
       <div className='self-start'>
@@ -88,9 +87,15 @@ function TableItem({
           {row.status}
         </span>
         <span className='text-sm text-muted'>
-          {row.description.substring(0, 200)}
-          {row.description.length > 200 && '... '}
-          <button className='text-white'>Подробнее</button>
+          {row.description ? (
+            <>
+              {row.description.substring(0, 200)}
+              {row.description.length > 200 && '... '}
+              <button className='text-white'>Подробнее</button>
+            </>
+          ) : (
+            <>Описание отсутствует</>
+          )}
         </span>
       </div>
       <div className='flex justify-center self-start'>
@@ -103,7 +108,7 @@ function TableItem({
           <IoSparkles className='text-sm text-pink-400' />
           <span className='font-jetBrains-mono'>AI</span>
         </button>
-        <AiModal data={{ name: row.name, id: row.id }} />
+        {/* <AiModal data={{ name: row.name, id: row.id }} /> */}
       </div>
     </div>
   );
