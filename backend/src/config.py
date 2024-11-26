@@ -11,10 +11,6 @@ DEV = True  # TODO: изменить
 TOKEN_TYPE_FIELD = "type"
 ACCESS_TOKEN_TYPE = "access"
 REFRESH_TOKEN_TYPE = "refresh"
-BOT_URL = "t.me/ScannerBoxBot"
-VULNERABILITY_SCAN_SERVICE_URL = "http://localhost:8080/api/vulnerability-scan"
-HOST_SCAN_SERVICE_URL = "http://localhost:8080/api/host-discovery-scan"
-AI_SERVICE_URL = "http://87.251.74.178/get_recommendations"
 
 
 class Settings(BaseSettings):
@@ -25,6 +21,12 @@ class Settings(BaseSettings):
     db_name: str
     db_echo: bool
     bot_token: str
+    scan_service_api_key: str
+    bot_url: str
+    vulnerability_scan_service_url: str
+    host_scan_service_url: str
+    ai_service_url: str
+    redis_host: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
