@@ -1,7 +1,9 @@
 import asyncio
+import json
 
 from fastapi import FastAPI, Request, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 import logging
 
@@ -23,7 +25,15 @@ origins = [
     "https://scannerbox.ru",
 ]
 if DEV:
-    origins.extend(["http://localhost:3000", "https://localhost:3000"])
+    origins.extend(
+        [
+            "http://localhost:3000",
+            "https://localhost:3000",
+            "http://localhost:3000",
+            "http://localhost:9000",
+        ]
+    )
+
 
 app = FastAPI(
     title="ScannerBox API",
@@ -60,8 +70,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все методы
-    allow_headers=["*"],  # Разрешить все заголовки
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -69,7 +79,8 @@ main_router.include_router(auth_router)
 main_router.include_router(users_router)
 main_router.include_router(assets_router)
 main_router.include_router(host_scans_router)
-main_router.include_router(vulnerability_scans_router)
 main_router.include_router(cves_router)
+main_router.include_router(vulnerability_scans_router)
+
 
 app.include_router(main_router)

@@ -21,13 +21,11 @@ from ..config import (
 )
 from . import utils as auth_utils
 from .. import utils
-from ..users.schemas import User as UserSchema, LoginUser, UserCreate
+from ..users.schemas import User as UserSchema, LoginUser
 from ..users import service
-from ..users.models import User
 from ..database import db_manager, redis_client
-from ..users.service import create_user, get_user_by_username
+from ..users.service import get_user_by_username
 from ..utils import hash_password
-from src import config
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/jwt/login/")
@@ -174,10 +172,19 @@ async def register_user(
         json.dumps(data),
         ex=auth_settings.tg_confirm_expire_seconds,
     )
-    url = config.BOT_URL + f"?start={unique_token}"
+    url = settings.bot_url + f"?start={unique_token}"
     link_telegram_bot = LinkTelegramBot(
         url=url,
         expire_seconds=auth_settings.tg_confirm_expire_seconds,
         unique_token=unique_token,
     )
     return link_telegram_bot
+
+
+async def auth_by_api_key(api_key: str = Depends(oauth2_scheme)):
+    if api_key != settings.scan_service_api_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Неверный ключ",
+        )
+

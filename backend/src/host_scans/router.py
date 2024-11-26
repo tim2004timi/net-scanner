@@ -9,7 +9,7 @@ from ..assets.models import Asset
 from ..assets.service import get_asset_by_id
 from ..database import db_manager, redis_client
 from . import service
-from ..auth.dependencies import get_current_active_auth_user
+from ..auth.dependencies import get_current_active_auth_user, auth_by_api_key
 from ..dependencies import check_permission, Permission
 from ..users.schemas import User
 from .schemas import HostScan, HostScanList, HostScanCreate
@@ -77,13 +77,12 @@ async def get_host_scan_by_id(
 @router.post(
     path="/{asset_id}/host-scans/",
     summary="Create host scans list for asset for scan service",
-    dependencies=[Depends(check_permission(Permission.ADMIN))],
+    dependencies=[Depends(auth_by_api_key)]
 )
 async def create_host_scans(
     asset_id: int,
     host_scans_list_create: List[HostScanCreate],
     session: AsyncSession = Depends(db_manager.session_dependency),
-    user: User = Depends(get_current_active_auth_user),
 ):
     """
     Creates host scans.
@@ -112,12 +111,11 @@ async def create_host_scans(
 @router.post(
     path="/{asset_id}/host-scans/keep-alive/",
     summary="Keep alive for host scan for scan service",
-    dependencies=[Depends(check_permission(Permission.ADMIN))],
+    dependencies=[Depends(auth_by_api_key)]
 )
 async def keep_alive_host_scan(
     asset_id: int,
     session: AsyncSession = Depends(db_manager.session_dependency),
-    _: User = Depends(get_current_active_auth_user),
 ):
     """
     Keep alive for host scan for scan service every 5 minutes.
