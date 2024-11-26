@@ -10,7 +10,7 @@ from starlette import status
 from math import ceil
 from .models import Asset
 from .schemas import AssetCreate, StatusEnum, AssetUpdatePartial, AssetsList
-from ..config import HOST_SCAN_SERVICE_URL
+from ..config import settings
 from ..database import db_manager, redis_client
 from ..scheduler_utils import remove_scheduled_scan, schedule_scan
 from ..users import User
@@ -142,7 +142,7 @@ async def send_to_scan_service(asset_id: int, timeout=1):
         async with httpx.AsyncClient(timeout=timeout) as client:
             data = {"asset_id": asset.id, "targets": asset.targets}
             try:
-                response = await client.post(HOST_SCAN_SERVICE_URL, json=data)
+                response = await client.post(settings.host_scan_service_url, json=data)
                 asset.start_host_scan_at = datetime.utcnow()
                 await session.commit()
                 response.raise_for_status()
