@@ -1,5 +1,6 @@
 postgres_data
 redist_data
+redist_data/*
 token.txt
 .env
 cfg.yml
