@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    build: ./frontend
+    build: ../frontend
     container_name: frontend
     restart: unless-stopped
     depends_on:
@@ -13,7 +13,7 @@ services:
       - "8080:3000"
   backend:
     build:
-      context: ./backend
+      context: ../backend
       dockerfile: Dockerfile.backend
     container_name: backend
 #    command: ["alembic", "upgrade", "head"]
@@ -25,8 +25,6 @@ services:
       - redis
       - scanner
       - nn
-#    ports:
-#      - "8000:8000"
   postgres:
     image: "postgres:latest"
     container_name: postgres
@@ -43,8 +41,6 @@ services:
     image: redis:latest
     container_name: redis
     restart: always
-#    ports:
-#      - "6379:6379"
     volumes:
       - ./redis_data:/data
     command: ["redis-server", "--appendonly", "yes"]
@@ -59,20 +55,16 @@ services:
       - redis
   scanner:
     build:
-     context: ./scanner-box
-     dockerfile: ./Deployments/Dockerfile
+     context: ../scanner-box
+     dockerfile: Dockerfile
     container_name: scanner
     restart: always
     env_file:
       - .env
-#    ports:
-#      - "9000:9000"
   nn:
    image: "otchayanniy/cyberassistant:version0.1"
    container_name: nn
    restart: always 
-#   ports:
-#    - "8008:8000"
 volumes:
   postgres_data:
   redis_data:
