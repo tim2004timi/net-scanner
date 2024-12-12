@@ -5,3 +5,4 @@ token.txt
 cfg.yml
 cfg.yaml
 venv
+*.log

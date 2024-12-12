@@ -16,7 +16,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.backend
     container_name: backend
-   # command: ["alembic", "upgrade", "head"]
+#    command: ["alembic", "upgrade", "head"]
     env_file:
       - .env
     restart: unless-stopped
@@ -25,8 +25,8 @@ services:
       - redis
       - scanner
       - nn
-    ports:
-      - "8000:8000"
+#    ports:
+#      - "8000:8000"
   postgres:
     image: "postgres:latest"
     container_name: postgres
@@ -43,8 +43,8 @@ services:
     image: redis:latest
     container_name: redis
     restart: always
-    ports:
-      - "6379:6379"
+#    ports:
+#      - "6379:6379"
     volumes:
       - ./redis_data:/data
     command: ["redis-server", "--appendonly", "yes"]
@@ -65,14 +65,14 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - "9000:9000"
+#    ports:
+#      - "9000:9000"
   nn:
    image: "otchayanniy/cyberassistant:version0.1"
    container_name: nn
    restart: always 
-   ports:
-    - "8008:8000"
+#   ports:
+#    - "8008:8000"
 volumes:
   postgres_data:
   redis_data:
