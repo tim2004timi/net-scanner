@@ -46,7 +46,7 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
   bot:
     build:
-      context: ./backend
+      context: ../backend
       dockerfile: Dockerfile.bot
     container_name: bot
     restart: always
